@@ -2,7 +2,7 @@
   "name": "typematch",
   "private": true,
   "version": "0.1.0",
-  "description": "Paste two Google Fonts and preview the pairing across a real fake app UI, with a live contrast/readability score.",
+  "description": "Typebed: a Google font pairing tool that renders two fonts across a real product UI (nav bar, pricing card, signup form) with a live WCAG contrast and readability score.",
   "type": "module",
   "license": "MIT",
   "repository": {
