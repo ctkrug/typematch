@@ -43,7 +43,9 @@ function loadStylesheet(url: string): Promise<void> {
 async function loadFaces(font: FontFamily): Promise<void> {
   if (typeof document === "undefined" || !("fonts" in document)) return;
   const weights = font.weights.length > 0 ? font.weights : [400];
-  await Promise.all(weights.map((weight) => document.fonts.load(`${weight} 16px "${font.family}"`)));
+  await Promise.all(
+    weights.map((weight) => document.fonts.load(`${weight} 16px "${font.family}"`)),
+  );
 }
 
 /** The app-wide loader. One cache per session, as story 1.3 requires. */

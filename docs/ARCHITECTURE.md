@@ -1,7 +1,7 @@
 # Typematch — Architecture
 
 A map of the codebase for anyone (human or agent) picking it up cold.
-See [VISION.md](./VISION.md) for *why*, [DESIGN.md](./DESIGN.md) for the visual system,
+See [VISION.md](./VISION.md) for _why_, [DESIGN.md](./DESIGN.md) for the visual system,
 [BACKLOG.md](./BACKLOG.md) for what's done and what's left.
 
 ## Shape
@@ -42,7 +42,7 @@ defaults ──┘        │
                     └─► favorites ⇄ localStorage
 ```
 
-`Pairing` (`state/pairingUrl.ts`) is the one piece of app state. The URL is a *mirror* of it,
+`Pairing` (`state/pairingUrl.ts`) is the one piece of app state. The URL is a _mirror_ of it,
 not a second source of truth — it's written on change and read only at first paint.
 
 ## The load-and-swap contract (the subtle part)
@@ -50,7 +50,7 @@ not a second source of truth — it's written on change and read only at first p
 `fonts/useLoadedFont.ts` is where the "no flash of fallback" guarantee lives:
 
 - It keeps painting the **previously applied** family until the newly selected face has actually
-  downloaded. The selected font and the *applied* font are deliberately different values.
+  downloaded. The selected font and the _applied_ font are deliberately different values.
 - A failed load still commits — to the category's system stack (`fonts/stack.ts`) plus an error
   string — so a dead family degrades instead of blanking the preview.
 - `revision` increments on every commit. It is **load-bearing**: the first paint applies a
@@ -69,21 +69,21 @@ the tree so tests can swap it and never hit the network.
 
 `scoring/score.ts` produces a 0–100 overall plus a factor breakdown:
 
-| Factor        | Weight | Source                                                     |
-| ------------- | ------ | ---------------------------------------------------------- |
-| Text contrast | 0.40   | WCAG 2.x ratio of the preview palette's text vs background |
-| Body legibility | 0.30 | UI font's measured x-height ÷ cap-height                    |
-| Pairing contrast | 0.30 | measured divergence of the two faces + category difference |
+| Factor           | Weight | Source                                                     |
+| ---------------- | ------ | ---------------------------------------------------------- |
+| Text contrast    | 0.40   | WCAG 2.x ratio of the preview palette's text vs background |
+| Body legibility  | 0.30   | UI font's measured x-height ÷ cap-height                   |
+| Pairing contrast | 0.30   | measured divergence of the two faces + category difference |
 
 Three rules that are easy to break by accident:
 
 - **Only objective defects veto the overall** (cap below `WARN_THRESHOLD` = 60): text that fails
   WCAG, and the same family in both slots. A weighted average would otherwise let a nice
-  x-height hide a hard WCAG failure. Legibility and distinction are *heuristics* — they steer via
+  x-height hide a hard WCAG failure. Legibility and distinction are _heuristics_ — they steer via
   weight and explain themselves in the breakdown, but they don't veto. An earlier version let
   any poor factor cap, which wrongly condemned good same-category pairings (Oswald + Inter).
 - **The distinction constants are calibrated from measured data, not intuition** — see the
-  `DISTINCTION` block. The category share is large because the metrics *cannot see skeleton*:
+  `DISTINCTION` block. The category share is large because the metrics _cannot see skeleton_:
   Fraunces and Inter differ by 0.0015 in average character width yet are unmistakable. If you
   retune, re-measure first; the observed spread is x-height ratio ~0.61–1.0 and average width
   ~0.39–0.60 across the catalog.

@@ -190,7 +190,9 @@ describe("App", () => {
 
     expect(within(score).getByText(/\/100/)).toBeInTheDocument();
     expect(within(score).getByText(/text contrast/i)).toBeInTheDocument();
-    expect(within(score).getByRole("status")).toHaveTextContent(/readability score \d+ out of 100/i);
+    expect(within(score).getByRole("status")).toHaveTextContent(
+      /readability score \d+ out of 100/i,
+    );
   });
 
   it("saves a pairing and restores it after a full reload", async () => {

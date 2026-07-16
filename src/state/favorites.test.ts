@@ -70,7 +70,10 @@ describe("addFavorite", () => {
     for (let i = 0; i < MAX_FAVORITES + 5; i++) {
       // Distinct pairings, so none of them dedupe away.
       const ui = i % 2 === 0 ? "Inter" : "Work Sans";
-      list = addFavorite(list, { ...pairing("Fraunces", ui), theme: i % 3 === 0 ? "dark" : "light" });
+      list = addFavorite(list, {
+        ...pairing("Fraunces", ui),
+        theme: i % 3 === 0 ? "dark" : "light",
+      });
     }
     expect(list.length).toBeLessThanOrEqual(MAX_FAVORITES);
   });

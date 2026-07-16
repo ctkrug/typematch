@@ -42,13 +42,13 @@ actually looks like a shipped product or just a specimen sheet.
 
 ## How the score works
 
-| Factor           | Weight | Measured from                                              |
-| ---------------- | ------ | ---------------------------------------------------------- |
+| Factor           | Weight | Measured from                                               |
+| ---------------- | ------ | ----------------------------------------------------------- |
 | Text contrast    | 0.40   | WCAG 2.x contrast ratio of the preview's text vs background |
 | Body legibility  | 0.30   | the UI font's rendered x-height ÷ cap-height                |
 | Pairing contrast | 0.30   | how far the two faces' metrics and categories diverge       |
 
-Metrics come from measuring the *actual rasterized glyphs* via canvas, not a lookup table of
+Metrics come from measuring the _actual rasterized glyphs_ via canvas, not a lookup table of
 curated pairings — so it works for any pairing you throw at it. Contrast carries the most
 weight because it's the only factor with an objective pass/fail, and **any failing factor caps
 the overall score**: a healthy x-height should never average away text that fails WCAG.

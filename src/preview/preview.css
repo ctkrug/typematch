@@ -130,14 +130,7 @@
   background: var(--preview-accent);
   opacity: 0.85;
   /* A checkmark punched out of the dot — no icon font, no asset. */
-  clip-path: polygon(
-    22% 48%,
-    38% 64%,
-    76% 26%,
-    86% 36%,
-    38% 84%,
-    12% 58%
-  );
+  clip-path: polygon(22% 48%, 38% 64%, 76% 26%, 86% 36%, 38% 84%, 12% 58%);
 }
 
 /* ---------- nav ---------- */
@@ -165,7 +158,11 @@
   width: 18px;
   height: 18px;
   border-radius: 4px;
-  background: linear-gradient(135deg, var(--preview-accent), color-mix(in oklab, var(--preview-accent) 55%, #000));
+  background: linear-gradient(
+    135deg,
+    var(--preview-accent),
+    color-mix(in oklab, var(--preview-accent) 55%, #000)
+  );
   transform: rotate(-12deg);
 }
 

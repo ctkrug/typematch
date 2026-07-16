@@ -29,7 +29,9 @@ describe("loadThemePreference / saveThemePreference", () => {
   it("survives a reload — the point of persisting", () => {
     const store = memoryStore();
     saveThemePreference(store, "dark");
-    expect(loadThemePreference(memoryStore({ [THEME_KEY]: store.getItem(THEME_KEY)! }))).toBe("dark");
+    expect(loadThemePreference(memoryStore({ [THEME_KEY]: store.getItem(THEME_KEY)! }))).toBe(
+      "dark",
+    );
   });
 
   it("returns null when nothing is stored", () => {

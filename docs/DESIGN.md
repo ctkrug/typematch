@@ -50,7 +50,7 @@ Fonts CDN) — independent of whatever pairing the user is previewing inside the
 - No horizontal scroll at any breakpoint; text measures in the preview's form/paragraph content
   stay ≤ 70ch.
 
-> **Changed 2026-07-16 (BUILD):** the original intent put a *score chip* in the top rail. Once
+> **Changed 2026-07-16 (BUILD):** the original intent put a _score chip_ in the top rail. Once
 > the score grew a real breakdown — three factors, each with a meter and a plain-language
 > verdict — a chip couldn't hold it without either truncating the verdicts (which are the useful
 > part; a bare "62" tells a designer nothing) or pushing the rail past 200px and eating the

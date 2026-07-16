@@ -46,7 +46,12 @@ export function CopyLinkButton({ url, copy = defaultCopy }: CopyLinkButtonProps)
 
   return (
     <div className="copy">
-      <button type="button" className="btn btn--accent copy__btn" onClick={onClick} data-state={state}>
+      <button
+        type="button"
+        className="btn btn--accent copy__btn"
+        onClick={onClick}
+        data-state={state}
+      >
         <span className="copy__icon" aria-hidden="true" data-state={state} />
         {state === "copied" ? "Link copied" : state === "failed" ? "Press ⌘C" : "Copy link"}
       </button>

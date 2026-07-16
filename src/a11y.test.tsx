@@ -36,7 +36,9 @@ describe("accessibility", () => {
       await user.tab();
       const active = document.activeElement as HTMLElement | null;
       if (!active || active === document.body) break;
-      reached.push(active.getAttribute("aria-label") ?? active.textContent?.trim() ?? active.tagName);
+      reached.push(
+        active.getAttribute("aria-label") ?? active.textContent?.trim() ?? active.tagName,
+      );
     }
 
     // Skip link first, then the two pickers, then theme, then the side column.
@@ -118,7 +120,9 @@ describe("accessibility", () => {
 
   it("gives the preview a landmark a screen reader can jump to", async () => {
     renderApp();
-    expect(await screen.findByRole("region", { name: /live pairing preview/i })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("region", { name: /live pairing preview/i }),
+    ).toBeInTheDocument();
   });
 
   it("moves focus to the preview when the skip link is used", async () => {

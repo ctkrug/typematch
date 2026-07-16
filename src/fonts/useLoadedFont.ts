@@ -54,7 +54,8 @@ export function useLoadedFont(font: FontFamily, override?: FontLoader): LoadedFo
       setApplied((previous) => ({
         font,
         stack: result.status === "error" ? fallbackStack(font) : fontStack(font),
-        error: result.status === "error" ? (result.error ?? "This font could not be loaded.") : null,
+        error:
+          result.status === "error" ? (result.error ?? "This font could not be loaded.") : null,
         revision: previous.revision + 1,
       }));
       setIsLoading(false);

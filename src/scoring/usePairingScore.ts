@@ -33,8 +33,16 @@ export interface UsePairingScoreInput {
  * change.
  */
 export function usePairingScore(input: UsePairingScoreInput): PairingScore | null {
-  const { displayStack, uiStack, displayCategory, uiCategory, displayFamily, uiFamily, theme, revision } =
-    input;
+  const {
+    displayStack,
+    uiStack,
+    displayCategory,
+    uiCategory,
+    displayFamily,
+    uiFamily,
+    theme,
+    revision,
+  } = input;
 
   // One canvas for the app's lifetime; allocating per measurement is wasteful
   // and, in some engines, leaks until GC.

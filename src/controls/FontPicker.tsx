@@ -123,7 +123,11 @@ export function FontPicker({ label, hint, value, onChange, isLoading, error }: F
           }}
           onKeyDown={onKeyDown}
         />
-        <span className="picker__spinner" data-visible={isLoading ? "true" : "false"} aria-hidden="true" />
+        <span
+          className="picker__spinner"
+          data-visible={isLoading ? "true" : "false"}
+          aria-hidden="true"
+        />
       </div>
 
       {isOpen && (
@@ -152,7 +156,8 @@ export function FontPicker({ label, hint, value, onChange, isLoading, error }: F
             >
               <span className="picker__option-name">{font.family}</span>
               <span className="picker__option-meta">
-                {font.category} · {font.weights.length} {font.weights.length === 1 ? "weight" : "weights"}
+                {font.category} · {font.weights.length}{" "}
+                {font.weights.length === 1 ? "weight" : "weights"}
               </span>
             </li>
           ))}

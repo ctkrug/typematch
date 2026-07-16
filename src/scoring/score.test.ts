@@ -142,7 +142,11 @@ describe("scorePairing", () => {
   });
 
   it("falls back to contrast-only when only one slot could be measured", () => {
-    const score = scorePairing({ ...INK_ON_PAPER, display, ui: { metrics: null, category: "sans-serif" } })!;
+    const score = scorePairing({
+      ...INK_ON_PAPER,
+      display,
+      ui: { metrics: null, category: "sans-serif" },
+    })!;
     expect(score.measured).toBe(false);
   });
 

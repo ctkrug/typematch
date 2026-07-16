@@ -17,7 +17,11 @@ import {
   saveFavorites,
 } from "./state/favorites";
 import { DEFAULT_PAIRING, decodePairing, encodePairing, type Pairing } from "./state/pairingUrl";
-import { loadThemePreference, resolveInitialTheme, saveThemePreference } from "./state/themePreference";
+import {
+  loadThemePreference,
+  resolveInitialTheme,
+  saveThemePreference,
+} from "./state/themePreference";
 import "./styles/app-shell.css";
 
 const SAVE_ERROR = "Couldn't save — your browser is blocking local storage.";
@@ -96,9 +100,7 @@ export function App() {
               match
             </span>
           </h1>
-          <p className="brand__tagline">
-            Two fonts, one real interface — not a specimen sheet.
-          </p>
+          <p className="brand__tagline">Two fonts, one real interface — not a specimen sheet.</p>
         </div>
 
         <div className="rail">

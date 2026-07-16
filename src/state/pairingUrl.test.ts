@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { FONT_CATALOG, findFamily } from "../fonts/catalog";
 import { THEMES } from "../preview/theme";
-import { DEFAULT_PAIRING, decodePairing, encodePairing, pairingUrl, type Pairing } from "./pairingUrl";
+import {
+  DEFAULT_PAIRING,
+  decodePairing,
+  encodePairing,
+  pairingUrl,
+  type Pairing,
+} from "./pairingUrl";
 
 const PAIRING: Pairing = {
   display: findFamily("Playfair Display")!,

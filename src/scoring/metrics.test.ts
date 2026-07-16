@@ -70,7 +70,10 @@ describe("measureFontMetrics", () => {
   });
 
   it("distinguishes a large-x-height face from a small-x-height one", () => {
-    const large = measureFontMetrics("serif", fakeMeasurer({ x: 0.56, cap: 0.72, charWidth: 0.5 }))!;
+    const large = measureFontMetrics(
+      "serif",
+      fakeMeasurer({ x: 0.56, cap: 0.72, charWidth: 0.5 }),
+    )!;
     const small = measureFontMetrics("serif", fakeMeasurer({ x: 0.4, cap: 0.72, charWidth: 0.5 }))!;
 
     expect(large.xHeightRatio).toBeGreaterThan(small.xHeightRatio);
