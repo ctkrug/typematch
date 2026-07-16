@@ -28,11 +28,19 @@ export interface PairingScore {
   measured: boolean;
 }
 
+/** A face with metrics resolved — what the factor functions actually judge. */
+export interface ScoredFace {
+  metrics: FontMetrics;
+  category: FontCategory;
+  /** Family name, used to detect the same font in both slots. */
+  family?: string;
+}
+
 export interface ScoreInput {
   textColor: string;
   bgColor: string;
-  display?: { metrics: FontMetrics | null; category: FontCategory };
-  ui?: { metrics: FontMetrics | null; category: FontCategory };
+  display?: { metrics: FontMetrics | null; category: FontCategory; family?: string };
+  ui?: { metrics: FontMetrics | null; category: FontCategory; family?: string };
 }
 
 /** Below this, the pairing is flagged as a warning rather than just a low number. */
@@ -93,9 +101,30 @@ export function contrastScore(ratio: number): number {
 export function legibilityScore(xHeightRatio: number): number {
   const [low, high] = [0.68, 0.8];
   if (xHeightRatio >= low && xHeightRatio <= high) return 100;
-  const distance = xHeightRatio < low ? low - xHeightRatio : xHeightRatio - high;
-  return clamp(100 - distance * 500);
+  // Asymmetric on purpose: a too-small x-height makes 13px labels genuinely
+  // hard to read, while a too-large one only costs some elegance. Measured
+  // reference points — Inter sits at 0.75, Cormorant Garamond at 0.63.
+  const distance = xHeightRatio < low ? (low - xHeightRatio) * 700 : (xHeightRatio - high) * 400;
+  return clamp(100 - distance);
 }
+
+/**
+ * Point budgets for the distinction factor, summing to 100.
+ *
+ * Calibrated against measured Google Fonts data, not intuition. The category
+ * share is large because the metrics genuinely can't see the thing that most
+ * separates two faces — their skeleton. Measured: Fraunces and Inter differ by
+ * 0.0015 in average character width (they are, numerically, the same width),
+ * yet nobody would mistake one for the other. The saturation points are set
+ * from the observed spread: x-height ratios run ~0.61–1.0 across the catalog,
+ * and average widths ~0.39–0.60.
+ */
+const DISTINCTION = {
+  /** Serif-vs-sans reads at a glance even when every metric agrees. */
+  category: 55,
+  xHeight: { points: 25, saturateAt: 0.15 },
+  width: { points: 20, saturateAt: 0.1 },
+} as const;
 
 /**
  * Score how distinguishable the two faces are.
@@ -106,17 +135,24 @@ export function legibilityScore(xHeightRatio: number): number {
  * categories buy a baseline of distinction because serif-vs-sans is legible
  * even when the metrics match.
  */
-export function distinctionScore(
-  display: { metrics: FontMetrics; category: FontCategory },
-  ui: { metrics: FontMetrics; category: FontCategory },
-): number {
+export function distinctionScore(display: ScoredFace, ui: ScoredFace): number {
+  // The same family twice isn't a weak pairing, it's the absence of one.
+  if (display.family && display.family === ui.family) return 0;
+
+  const category = display.category === ui.category ? 0 : DISTINCTION.category;
+
+  // Each metric contributes a *bounded* share. Letting one saturate the whole
+  // score meant two garamond-ish serifs that merely differ in x-height scored
+  // as "unmistakable contrast" — a big x-height gap is a size difference, not
+  // the structural difference that actually builds hierarchy.
   const xHeightDelta = Math.abs(display.metrics.xHeightRatio - ui.metrics.xHeightRatio);
   const widthDelta = Math.abs(display.metrics.avgCharWidth - ui.metrics.avgCharWidth);
-  const categoryBonus = display.category === ui.category ? 0 : 0.12;
 
-  const raw = xHeightDelta * 2.5 + widthDelta * 5 + categoryBonus;
-  // 0.22 of accumulated difference is "clearly two different faces".
-  return clamp((raw / 0.22) * 100);
+  const xHeight =
+    Math.min(xHeightDelta / DISTINCTION.xHeight.saturateAt, 1) * DISTINCTION.xHeight.points;
+  const width = Math.min(widthDelta / DISTINCTION.width.saturateAt, 1) * DISTINCTION.width.points;
+
+  return clamp(category + xHeight + width);
 }
 
 function contrastFactor(ratio: number): ScoreFactor {
@@ -162,16 +198,16 @@ function legibilityFactor(metrics: FontMetrics): ScoreFactor {
   };
 }
 
-function distinctionFactor(
-  display: { metrics: FontMetrics; category: FontCategory },
-  ui: { metrics: FontMetrics; category: FontCategory },
-): ScoreFactor {
+function distinctionFactor(display: ScoredFace, ui: ScoredFace): ScoreFactor {
   const score = distinctionScore(display, ui);
-  const verdict =
-    score < 40
-      ? "These two faces are near-identical — the pairing reads as an accident."
+  const sameFamily = Boolean(display.family) && display.family === ui.family;
+
+  const verdict = sameFamily
+    ? "This is the same font twice — there's no pairing here to judge."
+    : score < 40
+      ? "Too alike to build hierarchy — headings won't separate from body copy."
       : score < WARN_THRESHOLD
-        ? "Subtle difference. Headings may not separate from body copy."
+        ? "Subtle difference. The hierarchy may not read at a glance."
         : score < 85
           ? "Clear hierarchy between display and body."
           : "Strong, unmistakable contrast between the two faces.";
@@ -181,8 +217,9 @@ function distinctionFactor(
     label: "Pairing contrast",
     score,
     level: levelOf(score),
-    readout:
-      display.category === ui.category
+    readout: sameFamily
+      ? "same family"
+      : display.category === ui.category
         ? `both ${display.category}`
         : `${display.category} + ${ui.category}`,
     verdict,
@@ -211,8 +248,16 @@ export function scorePairing(input: ScoreInput): PairingScore | null {
   const measured = Boolean(display?.metrics && ui?.metrics);
 
   if (measured) {
-    const displayMeasured = { metrics: display!.metrics!, category: display!.category };
-    const uiMeasured = { metrics: ui!.metrics!, category: ui!.category };
+    const displayMeasured: ScoredFace = {
+      metrics: display!.metrics!,
+      category: display!.category,
+      family: display!.family,
+    };
+    const uiMeasured: ScoredFace = {
+      metrics: ui!.metrics!,
+      category: ui!.category,
+      family: ui!.family,
+    };
     factors.push(legibilityFactor(uiMeasured.metrics));
     factors.push(distinctionFactor(displayMeasured, uiMeasured));
   }
@@ -221,13 +266,20 @@ export function scorePairing(input: ScoreInput): PairingScore | null {
     ? factors.reduce((sum, factor) => sum + factor.score * WEIGHTS[factor.id], 0)
     : factors[0].score;
 
-  // A weighted average lets one real defect hide behind two good factors —
-  // text that fails WCAG would still score "fair" on the strength of a nice
-  // x-height. Any poor factor therefore caps the overall below the warning
-  // threshold: the pairing has a defect, and the number has to say so.
-  const capped = factors.some((factor) => factor.level === "poor")
-    ? Math.min(weighted, WARN_THRESHOLD - 1)
-    : weighted;
+  // A weighted average lets a real defect hide behind two good factors, so
+  // some defects veto the overall instead of being averaged.
+  //
+  // Only *objective* ones qualify: text that fails WCAG, and the same family
+  // in both slots (which isn't a weak pairing, it's the absence of one).
+  // Legibility and distinction are heuristics — they steer the number through
+  // their weight and state their case in the breakdown, but they don't veto.
+  // An earlier version let any poor factor cap, which condemned genuinely
+  // good same-category pairings like Oswald + Inter: the metrics can't see
+  // the condensed skeleton that makes that hierarchy work.
+  const failsContrast = wcagLevel(ratio) === "Fail";
+  const sameFamily = Boolean(display?.family) && display?.family === ui?.family;
+  const capped =
+    failsContrast || (measured && sameFamily) ? Math.min(weighted, WARN_THRESHOLD - 1) : weighted;
 
   const rounded = Math.round(capped);
   return { overall: rounded, level: levelOf(rounded), factors, measured };
