@@ -90,9 +90,13 @@ Three rules that are easy to break by accident:
 - **Unmeasurable ⇒ `measured: false`, contrast-only** — never a fabricated number. Canvas text
   metrics don't exist in jsdom, so this path is exercised by the whole test suite.
 
-Sanity anchors from driving the real app (useful when retuning): Fraunces + Inter 90 ·
-Bebas Neue + Work Sans 100 · Oswald + Inter 78 · Roboto + Open Sans 72 (flagged "too alike") ·
-Playfair Display + Cormorant Garamond 68 · the same font twice 59.
+Sanity anchors, re-measured in Chromium against the built bundle (useful when retuning):
+Fraunces + Inter 91 · Bebas Neue + Work Sans 100 · Oswald + Inter 78 · Roboto + Open Sans 71
+(flagged "too alike") · Playfair Display + Cormorant Garamond 67 · the same font twice 59.
+
+These are exact and reproducible, not approximate — if one moves, something changed. Three of
+them were previously written down a point off; the current numbers were confirmed identical on
+a pre-QA build, so the code hadn't drifted, the note had.
 
 `scoring/metrics.ts` measures at 200px because the glyph bounding box comes back in near-integer
 units; at 16px the rounding error exceeds the differences between fonts.
