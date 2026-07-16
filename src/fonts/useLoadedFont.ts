@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { browserFontLoader } from "./browserLoader";
+import { useFontLoader } from "./FontLoaderContext";
 import type { FontLoader } from "./loader";
 import { fallbackStack, fontStack } from "./stack";
 import type { FontFamily } from "./types";
@@ -27,7 +27,10 @@ export interface LoadedFontState extends AppliedFont {
  * 1.1). A failed load still commits — to the category's system stack plus an
  * error the UI can surface — so a dead family degrades instead of blanking.
  */
-export function useLoadedFont(font: FontFamily, loader: FontLoader = browserFontLoader): LoadedFontState {
+export function useLoadedFont(font: FontFamily, override?: FontLoader): LoadedFontState {
+  const contextLoader = useFontLoader();
+  const loader = override ?? contextLoader;
+
   const [applied, setApplied] = useState<AppliedFont>(() => ({
     font,
     stack: fontStack(font),
