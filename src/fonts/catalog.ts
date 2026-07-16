@@ -57,7 +57,6 @@ export const FONT_CATALOG: readonly FontFamily[] = Object.freeze([
   { family: "Exo 2", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
   { family: "Kanit", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
   { family: "Anton", category: "sans-serif", weights: [400] },
-  { family: "Bebas Neue", category: "sans-serif", weights: [400] },
 
   // --- Serif ---
   { family: "Fraunces", category: "serif", weights: [300, 400, 500, 600, 700, 900] },
@@ -108,6 +107,7 @@ export const FONT_CATALOG: readonly FontFamily[] = Object.freeze([
   { family: "Staatliches", category: "display", weights: [400] },
   { family: "Monoton", category: "display", weights: [400] },
   { family: "Silkscreen", category: "display", weights: [400, 700] },
+  { family: "Bebas Neue", category: "display", weights: [400] },
 
   // --- Handwriting ---
   { family: "Caveat", category: "handwriting", weights: [400, 500, 600, 700] },
