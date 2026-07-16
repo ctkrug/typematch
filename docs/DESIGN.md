@@ -39,15 +39,24 @@ Fonts CDN) — independent of whatever pairing the user is previewing inside the
   form — fills the remaining viewport (~65%+ on desktop, full width on phone) inside a "page"
   surface with a visible paper-card edge (`--shadow-card`, `--radius-md`), so it reads as a
   distinct product mock rather than blending into the tool's own chrome.
-- **Desktop (1440×900):** control rail as a slim horizontal strip (two font-search fields +
-  score chip) at the top, ~120px tall; preview canvas below fills the rest, centered with
-  `max-width: 1200px` and generous side margins so the paper background is still visible as a
-  frame, not dead empty space.
-- **Phone (390×844):** control rail stacks vertically (font pickers full-width, score chip below
-  them); preview canvas is full-bleed with `--space-4` side padding and scrolls vertically
+- **Desktop (1440×900):** control rail as a slim horizontal strip (wordmark + two font-search
+  fields + theme toggle) at the top; below it a two-column body — preview at `minmax(0, 1fr)`
+  taking `min-height: 70vh`, and a 340px sticky side column holding the score, the share
+  control, and saved pairings. The whole shell is capped at `max-width: 1440px` so the paper
+  background still frames the content rather than leaving dead space.
+- **Phone (390×844):** rail stacks vertically (pickers full-width, toggle below); the side
+  column drops beneath the preview and reflows to auto-fit columns. Preview scrolls vertically
   through nav → hero → pricing → form.
 - No horizontal scroll at any breakpoint; text measures in the preview's form/paragraph content
   stay ≤ 70ch.
+
+> **Changed 2026-07-16 (BUILD):** the original intent put a *score chip* in the top rail. Once
+> the score grew a real breakdown — three factors, each with a meter and a plain-language
+> verdict — a chip couldn't hold it without either truncating the verdicts (which are the useful
+> part; a bare "62" tells a designer nothing) or pushing the rail past 200px and eating the
+> preview's viewport. The score moved to a sticky side column, which also gives the favorites
+> list and share control a home. The preview keeps ~65%+ of the desktop viewport either way, so
+> the hero intent above is unchanged.
 
 ## Signature detail
 
