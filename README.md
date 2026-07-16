@@ -56,6 +56,12 @@ npm run test      # run the test suite
 npm run lint      # lint the codebase
 ```
 
+## Deploy
+
+`npm run build` outputs a fully static, self-contained bundle to `dist/`. Vite is configured
+with a relative `base` (`./`), so the build works when served from the domain root or from any
+subpath (e.g. `example.com/typematch/`) — no server, no rewrite rules required.
+
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
