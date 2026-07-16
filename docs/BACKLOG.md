@@ -96,3 +96,34 @@ afterthought.
       choose one is missing.
   - Choosing a weight for either slot re-renders the mock in that weight and survives a
     shared-link round trip.
+
+## QA hardening (pass 1)
+
+Sweeps run against the built bundle in a real browser (Chromium), not only jsdom — the suite
+can't see measured scoring or layout, so anything visual or metric-dependent was verified by
+driving the page.
+
+- [x] **Green sweep** — 271 tests, lint, typecheck, format, and a clean-clone README run all green.
+- [x] **Adversarial input** — hostile shared links (script tags, 5k-char families, empty/emoji/
+      null-byte params, junk themes) and hand-corrupted localStorage all degrade per-field
+      instead of throwing. Non-finite glyph metrics and score inputs now fail closed.
+- [x] **State machine** — font CDN blocked, storage throwing on access, and two tabs editing
+      concurrently. Fixed: a save in one tab silently wiped another's favorites.
+- [x] **Coverage** — 96% lines overall via v8; every core-logic module well above the 85% bar.
+      Contrast and score carry property-based tests (fast-check) alongside the examples.
+- [x] **Mutation spot-check** — 5/5 caught, after the first attempt surfaced an unpinned score
+      band boundary.
+- [x] **Performance** — 40 font swaps in a long session: heap flat, node count stable, and one
+      `<link>` per distinct family (the fetch-once cache holds).
+- [x] **Accessibility** — keyboard-only pairing change, focus ring on every control, live-region
+      announcements. Fixed: several controls sat below the 44px touch-target minimum.
+- [x] **Design (D3)** — composed at 320/390/768/1440 with no horizontal scroll; warning state
+      reads via color, icon, and word; favicon and both preview themes verified.
+
+Known, considered, and left alone:
+
+- The tool's own chrome is light-only. That's the point of the paper-and-ink direction, and
+  `#FAF6EC` is warm rather than a pure-white flash; the light/dark toggle themes the _preview_,
+  which is what's being judged.
+- The mock nav's link row scrolls within itself below ~360px. Intentional: it keeps the CTA off
+  the card edge and the page itself never scrolls sideways.
