@@ -24,7 +24,7 @@ Paste (or pick) two Google Fonts — one display, one UI/body — and instead of
 render an entire fake product UI in that pairing: a nav bar, a hero, a pricing card, a signup
 form with labeled inputs, buttons in multiple states. Everything re-renders live as either font
 changes, with zero layout jank, so the comparison is instant and visceral. Alongside the visual
-preview, compute a live contrast/readability score from the *actual rendered* font metrics
+preview, compute a live contrast/readability score from the _actual rendered_ font metrics
 (x-height ratio, weight, letter-spacing, measured against WCAG contrast math) — a number that
 tells you whether the pairing is legible, not just whether it's pretty.
 
