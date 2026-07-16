@@ -48,7 +48,14 @@ export const WARN_THRESHOLD = 60;
 
 const WEIGHTS = { contrast: 0.4, legibility: 0.3, distinction: 0.3 } as const;
 
+/**
+ * Constrain to a range, treating a non-finite value as the floor.
+ *
+ * Failing closed is deliberate: a score we can't compute must never present
+ * as a good one, and NaN escapes Math.min/Math.max untouched.
+ */
 function clamp(value: number, min = 0, max = 100): number {
+  if (!Number.isFinite(value)) return min;
   return Math.min(max, Math.max(min, value));
 }
 
@@ -56,6 +63,9 @@ function clamp(value: number, min = 0, max = 100): number {
 function interpolate(value: number, anchors: ReadonlyArray<readonly [number, number]>): number {
   const first = anchors[0];
   const last = anchors[anchors.length - 1];
+  // A non-finite input matches no anchor and would fall through to the *top*
+  // of the curve — a perfect score for an uninterpretable ratio.
+  if (!Number.isFinite(value)) return first[1];
   if (value <= first[0]) return first[1];
   if (value >= last[0]) return last[1];
 
