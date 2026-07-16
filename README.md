@@ -50,8 +50,17 @@ actually looks like a shipped product or just a specimen sheet.
 
 Metrics come from measuring the _actual rasterized glyphs_ via canvas, not a lookup table of
 curated pairings — so it works for any pairing you throw at it. Contrast carries the most
-weight because it's the only factor with an objective pass/fail, and **any failing factor caps
-the overall score**: a healthy x-height should never average away text that fails WCAG.
+weight because it's the only factor with an objective pass/fail.
+
+**Only objective defects cap the overall score** — text that fails WCAG, and the same family in
+both slots. A healthy x-height should never average away text that fails WCAG. Legibility and
+pairing contrast are heuristics: they steer the number through their weight and explain
+themselves in the breakdown, but they don't veto, because the metrics can't see a typeface's
+skeleton. (Oswald + Inter is a genuinely good pairing that a naive "any weak factor caps it"
+rule condemns.)
+
+Where the glyphs can't be measured at all, the score falls back to contrast-only and says so,
+rather than inventing a number.
 
 ## Stack
 
