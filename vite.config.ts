@@ -14,5 +14,13 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      // The core logic the score and the sharing depend on. The React entry
+      // point and type-only files carry no branches worth a percentage.
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/main.tsx", "src/vite-env.d.ts", "src/test/**", "src/**/*.test.{ts,tsx}"],
+    },
   },
 });
