@@ -75,12 +75,24 @@ the tree so tests can swap it and never hit the network.
 | Body legibility | 0.30 | UI font's measured x-height ÷ cap-height                    |
 | Pairing contrast | 0.30 | measured divergence of the two faces + category difference |
 
-Two rules that are easy to break by accident:
+Three rules that are easy to break by accident:
 
-- **Any `poor` factor caps the overall below `WARN_THRESHOLD` (60).** A weighted average
-  otherwise lets a nice x-height hide a hard WCAG failure.
+- **Only objective defects veto the overall** (cap below `WARN_THRESHOLD` = 60): text that fails
+  WCAG, and the same family in both slots. A weighted average would otherwise let a nice
+  x-height hide a hard WCAG failure. Legibility and distinction are *heuristics* — they steer via
+  weight and explain themselves in the breakdown, but they don't veto. An earlier version let
+  any poor factor cap, which wrongly condemned good same-category pairings (Oswald + Inter).
+- **The distinction constants are calibrated from measured data, not intuition** — see the
+  `DISTINCTION` block. The category share is large because the metrics *cannot see skeleton*:
+  Fraunces and Inter differ by 0.0015 in average character width yet are unmistakable. If you
+  retune, re-measure first; the observed spread is x-height ratio ~0.61–1.0 and average width
+  ~0.39–0.60 across the catalog.
 - **Unmeasurable ⇒ `measured: false`, contrast-only** — never a fabricated number. Canvas text
   metrics don't exist in jsdom, so this path is exercised by the whole test suite.
+
+Sanity anchors from driving the real app (useful when retuning): Fraunces + Inter 90 ·
+Bebas Neue + Work Sans 100 · Oswald + Inter 78 · Roboto + Open Sans 72 (flagged "too alike") ·
+Playfair Display + Cormorant Garamond 68 · the same font twice 59.
 
 `scoring/metrics.ts` measures at 200px because the glyph bounding box comes back in near-integer
 units; at 16px the rounding error exceeds the differences between fonts.
