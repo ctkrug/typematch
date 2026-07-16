@@ -6,7 +6,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
   ],
-  ignorePatterns: ["dist", ".eslintrc.cjs"],
+  // site/ is committed build output, so it has to be named here explicitly:
+  // linting a minified bundle only ever reports the minifier's own style.
+  ignorePatterns: ["dist", "site", "coverage", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],
   rules: {

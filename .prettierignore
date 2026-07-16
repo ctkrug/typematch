@@ -1,0 +1,7 @@
+# Committed build output: Vite writes it, Prettier does not get a vote.
+site/
+
+# Generated
+coverage/
+dist/
+package-lock.json
