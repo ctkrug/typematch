@@ -108,6 +108,26 @@ export function saveFavorites(store: KeyValueStore | null, favorites: Pairing[])
   }
 }
 
+/**
+ * Apply a change to the stored favorites, merging against storage as it is
+ * right now rather than against a caller's snapshot.
+ *
+ * Favorites are shared mutable state: a second tab may have saved since this
+ * one read the list. Writing a mount-time snapshot back wholesale silently
+ * destroys whatever the other tab added, so the read happens here, at write
+ * time. `fallback` covers the no-store case, where there's nothing to merge
+ * against and the in-memory list is all there is.
+ */
+export function commitFavorites(
+  store: KeyValueStore | null,
+  fallback: Pairing[],
+  change: (current: Pairing[]) => Pairing[],
+): { favorites: Pairing[]; ok: boolean } {
+  const current = store ? loadFavorites(store) : fallback;
+  const favorites = change(current);
+  return { favorites, ok: saveFavorites(store, favorites) };
+}
+
 /** Add a pairing, newest first, ignoring an exact duplicate. */
 export function addFavorite(favorites: Pairing[], pairing: Pairing): Pairing[] {
   const id = favoriteId(pairing);

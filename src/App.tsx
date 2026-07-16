@@ -10,11 +10,11 @@ import type { Theme } from "./preview/theme";
 import { usePairingScore } from "./scoring/usePairingScore";
 import {
   addFavorite,
+  commitFavorites,
   isFavorite,
   loadFavorites,
   removeFavorite,
   safeLocalStorage,
-  saveFavorites,
 } from "./state/favorites";
 import {
   DEFAULT_PAIRING,
@@ -77,12 +77,15 @@ export function App() {
     window.history.replaceState(null, "", next);
   }, [pairing]);
 
+  // Every change is applied to storage as it stands at write time, so a save
+  // in this tab can't wipe out one made in another.
   const persist = useCallback(
-    (next: Pairing[]) => {
+    (change: (current: Pairing[]) => Pairing[]) => {
+      const { favorites: next, ok } = commitFavorites(store, favorites, change);
       setFavorites(next);
-      setSaveError(saveFavorites(store, next) ? null : SAVE_ERROR);
+      setSaveError(ok ? null : SAVE_ERROR);
     },
-    [store],
+    [store, favorites],
   );
 
   const saved = isFavorite(favorites, pairing);
@@ -155,9 +158,9 @@ export function App() {
           <FavoritesList
             favorites={favorites}
             isSaved={saved}
-            onSave={() => persist(addFavorite(favorites, pairing))}
+            onSave={() => persist((current) => addFavorite(current, pairing))}
             onApply={setPairing}
-            onRemove={(target) => persist(removeFavorite(favorites, target))}
+            onRemove={(target) => persist((current) => removeFavorite(current, target))}
             error={saveError}
           />
         </aside>

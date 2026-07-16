@@ -236,7 +236,8 @@ describe("commitFavorites", () => {
     const { favorites, ok } = commitFavorites(null, [A], (current) => addFavorite(current, B));
 
     expect(ok).toBe(false);
-    expect(favorites.map(favoriteId)).toEqual([favoriteId(A), favoriteId(B)]);
+    // Newest first, as everywhere else.
+    expect(favorites.map(favoriteId)).toEqual([favoriteId(B), favoriteId(A)]);
   });
 
   it("reports a failed write so the caller can say so", () => {
