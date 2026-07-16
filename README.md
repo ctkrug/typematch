@@ -1,6 +1,7 @@
 # Typematch
 
 [![CI](https://github.com/ctkrug/typematch/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/typematch/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Paste two Google Fonts. Instantly see the pairing across a real UI — not a headline-and-paragraph
 mockup, an entire fake app: a nav bar, a pricing card, a signup form — plus a live
