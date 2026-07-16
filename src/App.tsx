@@ -16,7 +16,13 @@ import {
   safeLocalStorage,
   saveFavorites,
 } from "./state/favorites";
-import { DEFAULT_PAIRING, decodePairing, encodePairing, type Pairing } from "./state/pairingUrl";
+import {
+  DEFAULT_PAIRING,
+  decodePairing,
+  encodePairing,
+  pairingUrl,
+  type Pairing,
+} from "./state/pairingUrl";
 import {
   loadThemePreference,
   resolveInitialTheme,
@@ -61,9 +67,10 @@ export function App() {
     revision: `${display.revision}:${ui.revision}`,
   });
 
-  // Mirror the pairing into the URL so it's always shareable and the back
-  // button walks the history. replaceState, not push: every keystroke-driven
-  // font change would otherwise bury the previous page in history.
+  // Mirror the pairing into the address bar so the page can be shared by
+  // copying it out of the browser. replaceState, not push: every font change
+  // would otherwise bury the referring page under a stack of near-identical
+  // entries the user has to click back through.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const next = `${window.location.pathname}?${encodePairing(pairing)}`;
@@ -79,7 +86,14 @@ export function App() {
   );
 
   const saved = isFavorite(favorites, pairing);
-  const shareUrl = typeof window === "undefined" ? "" : window.location.href;
+
+  // Built from the pairing, not read back from window.location: the address
+  // bar is written by an effect *after* this render, so reading it here would
+  // hand the copy button the previously rendered pairing.
+  const shareUrl = useMemo(
+    () => (typeof window === "undefined" ? "" : pairingUrl(pairing, window.location.href)),
+    [pairing],
+  );
 
   return (
     <div className="shell">

@@ -277,15 +277,11 @@ describe("App", () => {
     expect(screen.getByText(/nothing saved yet/i)).toBeInTheDocument();
   });
 
-  /**
-   * jsdom has no clipboard, so the copy always lands in the manual-copy
-   * fallback — which conveniently shows the exact URL the button would have
-   * copied.
-   */
+  /** Click "Copy link" and read back what actually reached the clipboard. */
   async function copiedUrl(user: ReturnType<typeof userEvent.setup>): Promise<string> {
     await user.click(screen.getByRole("button", { name: /copy link/i }));
-    const field = await screen.findByRole("textbox", { name: /shareable link/i });
-    return (field as HTMLInputElement).value;
+    await screen.findByText(/copied to your clipboard/i);
+    return navigator.clipboard.readText();
   }
 
   it("shares the pairing that is on screen right now", async () => {
