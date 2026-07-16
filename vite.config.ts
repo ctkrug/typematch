@@ -8,7 +8,10 @@ export default defineConfig({
   base: "./",
   plugins: [react()],
   build: {
-    outDir: "dist",
+    // Built into site/ and committed: this app *is* its own landing page, and
+    // the published directory should be the thing that was reviewed, not a
+    // rebuild of it. Re-run `npm run build` and commit site/ when src changes.
+    outDir: "site",
   },
   test: {
     environment: "jsdom",

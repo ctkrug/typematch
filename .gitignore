@@ -1,7 +1,7 @@
 # dependencies
 node_modules/
 
-# build output
+# build output — site/ is the published bundle and is deliberately committed
 dist/
 dist-ssr/
 

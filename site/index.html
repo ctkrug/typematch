@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A Google font pairing tool that renders two fonts across a real product UI (nav bar, pricing card, signup form) with a live WCAG contrast and readability score."
+    />
+    <title>Typebed — a Google font pairing tool that shows real UI</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Typebed — a Google font pairing tool that shows real UI" />
+    <meta
+      property="og:description"
+      content="Pick two Google Fonts and see them doing real work: button labels, form fields, small print, a pricing table. With a live WCAG contrast and readability score."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script type="module" crossorigin src="./assets/index-BZXjLqN1.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BJB4pvXT.css">
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!--
+      Static, not React: this is the copy a search crawler needs, so it ships in
+      the HTML rather than behind a hydration step. It also keeps the bundle out
+      of the business of rendering prose.
+    -->
+    <section class="page" aria-labelledby="about-heading">
+      <div class="page__inner">
+        <h2 class="page__heading" id="about-heading">
+          A Google font pairing tool that shows the fonts doing real work
+        </h2>
+
+        <p class="page__lede">
+          Typebed is a free Google font pairing tool. Pick a display family and a UI family, and it
+          sets both into a working product interface: a nav bar, a marketing hero with a stat row, a
+          three-tier pricing table, and a signup form with labels, helper text, an error state, and
+          a disabled button. No account, no install, no API key.
+        </p>
+
+        <p>
+          Most pairing tools stop at a big headline over a paragraph of filler. That view flatters
+          almost everything. A typeface only shows its problems once it has to do small, dense,
+          unglamorous work: a 13px form label, a button caption, the fine print under a trial CTA,
+          numerals in a pricing card. Plenty of pairs that look sharp as a specimen go soft at that
+          size, and you tend to find out after the fonts are already wired into a real codebase.
+        </p>
+
+        <h3>How the readability score works</h3>
+        <p>
+          Every pairing gets a score out of 100 with its reasoning shown. Text contrast is the WCAG
+          2.x ratio of the preview's text against its background, and it carries 40% of the weight
+          because it is the only factor with an objective pass or fail. Body legibility is the UI
+          font's x-height divided by its cap-height, measured from the glyphs your browser actually
+          rasterized rather than read from a lookup table. Pairing contrast measures how far the two
+          faces diverge. Two defects can cap the score: text that fails WCAG, and the same family in
+          both slots. The other factors steer the number and explain themselves in the breakdown,
+          but they never veto it, because a measurement cannot see a typeface's skeleton.
+        </p>
+
+        <h3>Questions</h3>
+        <dl class="faq">
+          <dt>Is Typebed a font pairing generator?</dt>
+          <dd>
+            No, and that is deliberate. A font pairing generator picks combinations for you, usually
+            from a curated shortlist. Typebed does the opposite: you bring a pairing you are already
+            considering and it shows you how that pairing holds up under real interface load, then
+            scores it. It works across all 112 families in the catalog, not a hand-picked set of
+            known-good answers.
+          </dd>
+
+          <dt>What are the best font combinations for a website?</dt>
+          <dd>
+            It depends on how dense the interface is, which is the reason to test one rather than
+            take a list's word for it. For reference, these are the numbers Typebed gives: Bebas
+            Neue with Work Sans reaches 100, Fraunces with Inter scores 90, and Oswald with Inter
+            scores 78. Roboto with Open Sans scores 72 and gets flagged as too alike, because both
+            are humanist sans faces at similar widths, so the hierarchy between heading and body
+            goes soft.
+          </dd>
+
+          <dt>Do I need a Google Fonts API key?</dt>
+          <dd>
+            No. Faces load from the keyless Google Fonts CSS2 CDN. There is no backend, no database,
+            and no account, so nothing about your pairing leaves the browser.
+          </dd>
+
+          <dt>Can I share a pairing?</dt>
+          <dd>
+            Yes. Both fonts and the light or dark preview state encode into the URL, so copying the
+            address bar shares the exact pairing. You can also save pairings to the browser, and
+            they survive a reload and stay in sync across tabs.
+          </dd>
+
+          <dt>Does it work on a phone?</dt>
+          <dd>
+            Yes. The layout reflows from 1440px down to 320px, and the mock scrolls through nav,
+            hero, pricing, and form.
+          </dd>
+        </dl>
+
+        <footer class="page__foot">
+          <p class="page__cta">
+            <a class="page__btn" href="https://github.com/ctkrug/typematch">View on GitHub</a>
+          </p>
+          <p class="page__meta">
+            Built by Charlie Krug. MIT licensed.
+            <a href="https://apps.charliekrug.com">More by Charlie Krug</a>
+          </p>
+        </footer>
+      </div>
+    </section>
+
+  </body>
+</html>
