@@ -276,4 +276,38 @@ describe("App", () => {
     expect(await screen.findByTestId("preview")).toBeInTheDocument();
     expect(screen.getByText(/nothing saved yet/i)).toBeInTheDocument();
   });
+
+  /**
+   * jsdom has no clipboard, so the copy always lands in the manual-copy
+   * fallback — which conveniently shows the exact URL the button would have
+   * copied.
+   */
+  async function copiedUrl(user: ReturnType<typeof userEvent.setup>): Promise<string> {
+    await user.click(screen.getByRole("button", { name: /copy link/i }));
+    const field = await screen.findByRole("textbox", { name: /shareable link/i });
+    return (field as HTMLInputElement).value;
+  }
+
+  it("shares the pairing that is on screen right now", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await screen.findByTestId("preview");
+
+    // A theme flip changes the pairing without loading a font, so nothing else
+    // re-renders afterwards to paper over a stale link.
+    await user.click(screen.getByRole("radio", { name: /dark/i }));
+    await waitFor(() => expect(screen.getByTestId("preview").dataset.theme).toBe("dark"));
+
+    expect(await copiedUrl(user)).toContain("theme=dark");
+  });
+
+  it("shares a full pairing link on first load, before anything is touched", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await screen.findByTestId("preview");
+
+    const url = await copiedUrl(user);
+    expect(url).toContain("display=Fraunces");
+    expect(url).toContain("ui=Inter");
+  });
 });
