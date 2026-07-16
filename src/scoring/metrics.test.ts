@@ -16,6 +16,9 @@ function fakeMeasurer(ratios: { x: number; cap: number; charWidth: number }): Me
 
 const HELVETICA_ISH = { x: 0.52, cap: 0.72, charWidth: 0.5 };
 
+/** The lowercase alphabet the measurer probes for average character width. */
+const ALPHABET_PROBE = "abcdefghijklmnopqrstuvwxyz";
+
 describe("measureFontMetrics", () => {
   it("normalizes measurements to the em", () => {
     const metrics = measureFontMetrics('"Inter", sans-serif', fakeMeasurer(HELVETICA_ISH))!;
@@ -77,6 +80,24 @@ describe("measureFontMetrics", () => {
     const small = measureFontMetrics("serif", fakeMeasurer({ x: 0.4, cap: 0.72, charWidth: 0.5 }))!;
 
     expect(large.xHeightRatio).toBeGreaterThan(small.xHeightRatio);
+  });
+});
+
+describe("measureFontMetrics — hostile measurements", () => {
+  /** A measurer that reports garbage for one probe and sane numbers otherwise. */
+  function poisoned(text: string, box: { width: number; ascent: number }): MeasureText {
+    return (probe, cssFont) =>
+      probe === text ? box : fakeMeasurer(HELVETICA_ISH)(probe, cssFont);
+  }
+
+  // "Unmeasurable" must mean null, never a number built from garbage: a NaN
+  // here propagates all the way to a NaN on screen.
+  it.each([
+    ["a NaN ascent", "x", { width: 100, ascent: Number.NaN }],
+    ["a NaN width", ALPHABET_PROBE, { width: Number.NaN, ascent: 100 }],
+    ["an infinite ascent", "H", { width: 100, ascent: Number.POSITIVE_INFINITY }],
+  ])("returns null for %s", (_name, text, box) => {
+    expect(measureFontMetrics("serif", poisoned(text as string, box))).toBeNull();
   });
 });
 

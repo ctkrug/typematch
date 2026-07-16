@@ -41,6 +41,13 @@ describe("contrastScore", () => {
     }
   });
 
+  // Fail closed, not open: a ratio we can't interpret is a broken input, and
+  // awarding it a perfect score is the one answer that must never happen.
+  it("fails closed on a ratio that isn't a real number", () => {
+    expect(contrastScore(Number.NaN)).toBe(0);
+    expect(legibilityScore(Number.NaN)).toBe(0);
+  });
+
   it("increases monotonically with the ratio", () => {
     let previous = -1;
     for (let ratio = 1; ratio <= 12; ratio += 0.25) {
