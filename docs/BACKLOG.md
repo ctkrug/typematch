@@ -69,7 +69,7 @@ afterthought.
 
 ## Epic 4 — Deploy & responsive hardening
 
-- [ ] **4.1 Responsive layout hardening**
+- [x] **4.1 Responsive layout hardening**
   - At 390px, 768px, and 1440px the control rail, preview, and score panel compose without
     overlap or horizontal scroll, matching `docs/DESIGN.md`'s layout intent.
 - [x] **4.2 Static build for subpath hosting**
