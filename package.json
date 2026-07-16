@@ -5,6 +5,9 @@
   "description": "Paste two Google Fonts and preview the pairing across a real fake app UI, with a live contrast/readability score.",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
