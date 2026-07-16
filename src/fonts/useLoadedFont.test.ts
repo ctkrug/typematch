@@ -99,6 +99,23 @@ describe("useLoadedFont", () => {
     expect(result.current.error).toBeNull();
   });
 
+  it("bumps the revision on each commit, so consumers can re-measure", async () => {
+    const deferred = deferredLoader();
+    const { result, rerender } = renderHook(({ font }) => useLoadedFont(font, deferred.loader), {
+      initialProps: { font: INTER },
+    });
+
+    // The first paint applies Inter's stack before its face has arrived, so
+    // the revision — not the stack — is what tells a consumer to re-measure.
+    expect(result.current.revision).toBe(0);
+    await deferred.settle(0, { family: "Inter", status: "loaded" });
+    expect(result.current.revision).toBe(1);
+
+    rerender({ font: LORA });
+    await deferred.settle(1, { family: "Lora", status: "loaded" });
+    expect(result.current.revision).toBe(2);
+  });
+
   it("ignores a stale load that resolves after a newer selection", async () => {
     const deferred = deferredLoader();
     const { result, rerender } = renderHook(({ font }) => useLoadedFont(font, deferred.loader), {
