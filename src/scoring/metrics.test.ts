@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { createCanvasMeasurer, measureFontMetrics, type MeasureText } from "./metrics";
 
 /**
@@ -103,6 +103,48 @@ describe("measureFontMetrics — hostile measurements", () => {
 describe("createCanvasMeasurer", () => {
   it("returns null when the environment has no usable text metrics", () => {
     // jsdom ships no canvas backend, so this is the real degraded path.
+    expect(createCanvasMeasurer()).toBeNull();
+  });
+
+  /**
+   * jsdom has no canvas backend at all, so the measurer it builds around a
+   * real 2d context can only be reached by standing one up by hand. The guards
+   * inside it are what let the app degrade instead of scoring against
+   * undefined, so they're worth reaching.
+   */
+  function withCanvas(context: unknown) {
+    const canvas = { getContext: () => context } as unknown as HTMLCanvasElement;
+    return vi.spyOn(document, "createElement").mockReturnValue(canvas);
+  }
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it("measures through a real 2d context when one exists", () => {
+    const measureText = vi.fn().mockReturnValue({ width: 42, actualBoundingBoxAscent: 24 });
+    const context = { font: "", measureText };
+    withCanvas(context);
+
+    const measure = createCanvasMeasurer()!;
+    expect(measure("x", '200px "Lora", serif')).toEqual({ width: 42, ascent: 24 });
+    // The font must be set on the context, or every family measures the same.
+    expect(context.font).toBe('200px "Lora", serif');
+    expect(measureText).toHaveBeenCalledWith("x");
+  });
+
+  it("treats a context with no bounding box as unmeasurable", () => {
+    // A width-only TextMetrics is exactly what a stub engine returns.
+    withCanvas({ font: "", measureText: () => ({ width: 42 }) });
+
+    expect(createCanvasMeasurer()!("x", "200px serif")).toBeNull();
+  });
+
+  it("returns null when the canvas yields no 2d context", () => {
+    withCanvas(null);
+    expect(createCanvasMeasurer()).toBeNull();
+  });
+
+  it("returns null when the context can't measure text", () => {
+    withCanvas({ font: "" });
     expect(createCanvasMeasurer()).toBeNull();
   });
 });
