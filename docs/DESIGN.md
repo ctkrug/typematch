@@ -10,24 +10,24 @@ used a warm/paper palette or a serif-led direction, so this also keeps the shipp
 
 ## Tokens
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-bg` | `#FAF6EC` | page background (warm paper) |
-| `--color-surface-1` | `#F0E7D5` | cards, panels |
-| `--color-surface-2` | `#E4D6B8` | nested surfaces, hover fill |
-| `--color-text` | `#221B12` | ink — primary text |
-| `--color-text-muted` | `#6F6552` | secondary text, captions |
-| `--color-accent` | `#C1502E` | terracotta — primary actions, links, focus ring |
-| `--color-accent-support` | `#2E5940` | forest green — secondary accent, badges |
-| `--color-success` | `#2E5940` | success states (shares support accent) |
-| `--color-danger` | `#A61C1C` | errors, invalid states |
-| `--font-display` | `"Fraunces", Georgia, "Times New Roman", serif` | wordmark, headings |
-| `--font-ui` | `"Inter", -apple-system, "Segoe UI", sans-serif` | body, controls, labels |
-| `--space-1..8` | `4, 8, 12, 16, 24, 32, 48, 64px` | 4/8px spacing scale |
-| `--radius-sm` / `--radius-md` | `4px` / `8px` | crisp, print-like corners — never pill-shaped |
-| `--shadow-card` | `0 1px 2px rgba(34,27,18,.08), 0 8px 24px rgba(34,27,18,.10)` | lifted-off-the-page depth |
-| `--motion-ui` | `160ms ease-out` | hover/focus/panel transitions |
-| `--motion-feedback` | `90ms ease-out` | button press, toggle flip |
+| Token                         | Value                                                         | Use                                             |
+| ----------------------------- | ------------------------------------------------------------- | ----------------------------------------------- |
+| `--color-bg`                  | `#FAF6EC`                                                     | page background (warm paper)                    |
+| `--color-surface-1`           | `#F0E7D5`                                                     | cards, panels                                   |
+| `--color-surface-2`           | `#E4D6B8`                                                     | nested surfaces, hover fill                     |
+| `--color-text`                | `#221B12`                                                     | ink — primary text                              |
+| `--color-text-muted`          | `#6F6552`                                                     | secondary text, captions                        |
+| `--color-accent`              | `#C1502E`                                                     | terracotta — primary actions, links, focus ring |
+| `--color-accent-support`      | `#2E5940`                                                     | forest green — secondary accent, badges         |
+| `--color-success`             | `#2E5940`                                                     | success states (shares support accent)          |
+| `--color-danger`              | `#A61C1C`                                                     | errors, invalid states                          |
+| `--font-display`              | `"Fraunces", Georgia, "Times New Roman", serif`               | wordmark, headings                              |
+| `--font-ui`                   | `"Inter", -apple-system, "Segoe UI", sans-serif`              | body, controls, labels                          |
+| `--space-1..8`                | `4, 8, 12, 16, 24, 32, 48, 64px`                              | 4/8px spacing scale                             |
+| `--radius-sm` / `--radius-md` | `4px` / `8px`                                                 | crisp, print-like corners — never pill-shaped   |
+| `--shadow-card`               | `0 1px 2px rgba(34,27,18,.08), 0 8px 24px rgba(34,27,18,.10)` | lifted-off-the-page depth                       |
+| `--motion-ui`                 | `160ms ease-out`                                              | hover/focus/panel transitions                   |
+| `--motion-feedback`           | `90ms ease-out`                                               | button press, toggle flip                       |
 
 Both fonts are loaded once for the app chrome itself (self-hosted via `@fontsource` or Google
 Fonts CDN) — independent of whatever pairing the user is previewing inside the fake UI.
