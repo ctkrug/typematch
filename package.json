@@ -5,6 +5,14 @@
   "description": "Paste two Google Fonts and preview the pairing across a real fake app UI, with a live contrast/readability score.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctkrug/typematch.git"
+  },
+  "homepage": "https://github.com/ctkrug/typematch#readme",
+  "bugs": {
+    "url": "https://github.com/ctkrug/typematch/issues"
+  },
   "engines": {
     "node": ">=20"
   },
