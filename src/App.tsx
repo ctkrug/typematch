@@ -17,6 +17,7 @@ import {
   saveFavorites,
 } from "./state/favorites";
 import { DEFAULT_PAIRING, decodePairing, encodePairing, type Pairing } from "./state/pairingUrl";
+import { loadThemePreference, resolveInitialTheme, saveThemePreference } from "./state/themePreference";
 import "./styles/app-shell.css";
 
 const SAVE_ERROR = "Couldn't save — your browser is blocking local storage.";
@@ -27,10 +28,18 @@ export function App() {
   const store = useMemo(() => safeLocalStorage(), []);
 
   // A shared link wins over defaults on first paint, so a link recipient sees
-  // the sender's pairing with no flash of Fraunces/Inter first.
-  const [pairing, setPairing] = useState<Pairing>(() =>
-    typeof window === "undefined" ? DEFAULT_PAIRING : decodePairing(window.location.search),
-  );
+  // the sender's pairing with no flash of Fraunces/Inter first. The theme is
+  // resolved separately: the link wins if it carries one, else the visitor's
+  // own saved preference applies.
+  const [pairing, setPairing] = useState<Pairing>(() => {
+    if (typeof window === "undefined") return DEFAULT_PAIRING;
+    const fromUrl = decodePairing(window.location.search);
+    const params = new URLSearchParams(window.location.search);
+    return {
+      ...fromUrl,
+      theme: resolveInitialTheme(params.get("theme"), loadThemePreference(store)),
+    };
+  });
   const [favorites, setFavorites] = useState<Pairing[]>(() => loadFavorites(store));
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -109,7 +118,10 @@ export function App() {
           />
           <ThemeToggle
             theme={pairing.theme}
-            onChange={(theme: Theme) => setPairing((current) => ({ ...current, theme }))}
+            onChange={(theme: Theme) => {
+              saveThemePreference(store, theme);
+              setPairing((current) => ({ ...current, theme }));
+            }}
           />
         </div>
       </header>

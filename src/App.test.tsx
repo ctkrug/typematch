@@ -154,6 +154,35 @@ describe("App", () => {
     expect(window.location.search).toContain("theme=dark");
   });
 
+  it("persists the theme across a full reload", async () => {
+    const user = userEvent.setup();
+    const { unmount } = renderApp();
+
+    await user.click(screen.getByRole("radio", { name: /dark/i }));
+    await waitFor(() => expect(screen.getByTestId("preview").dataset.theme).toBe("dark"));
+
+    // Reload from a bare URL: the preference, not the query string, must carry it.
+    unmount();
+    setUrl("");
+    renderApp();
+
+    expect((await screen.findByTestId("preview")).dataset.theme).toBe("dark");
+  });
+
+  it("lets a shared link's theme win over the visitor's saved preference", async () => {
+    const user = userEvent.setup();
+    const { unmount } = renderApp();
+
+    await user.click(screen.getByRole("radio", { name: /dark/i }));
+    unmount();
+
+    // The sender picked light deliberately for this pairing.
+    setUrl("?display=Lora&ui=Inter&theme=light");
+    renderApp();
+
+    expect((await screen.findByTestId("preview")).dataset.theme).toBe("light");
+  });
+
   it("shows the readability score with its factor breakdown", async () => {
     renderApp();
 
