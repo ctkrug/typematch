@@ -9,6 +9,7 @@ import {
   loadFavorites,
   removeFavorite,
   safeLocalStorage,
+  commitFavorites,
   saveFavorites,
   type KeyValueStore,
 } from "./favorites";
@@ -201,5 +202,45 @@ describe("safeLocalStorage", () => {
     expect(saveFavorites(store, [A])).toBe(true);
     expect(loadFavorites(store)).toEqual([A]);
     store!.removeItem(FAVORITES_KEY);
+  });
+});
+
+/**
+ * Favorites are shared mutable state: a second tab may have written since this
+ * one mounted. A change must therefore be applied to what is in storage right
+ * now, not to the snapshot this tab happens to be holding.
+ */
+describe("commitFavorites", () => {
+  it("merges a save on top of what another tab already wrote", () => {
+    const store = memoryStore();
+    saveFavorites(store, [B]); // the other tab saved B after we mounted
+    const stale: Pairing[] = []; // ...and we still believe the list is empty
+
+    const { favorites, ok } = commitFavorites(store, stale, (current) => addFavorite(current, A));
+
+    expect(ok).toBe(true);
+    expect(favorites.map(favoriteId)).toEqual([favoriteId(A), favoriteId(B)]);
+    expect(loadFavorites(store).map(favoriteId)).toContain(favoriteId(B));
+  });
+
+  it("removes against storage without resurrecting another tab's entries", () => {
+    const store = memoryStore();
+    saveFavorites(store, [A, B]);
+
+    const { favorites } = commitFavorites(store, [A], (current) => removeFavorite(current, A));
+
+    expect(favorites.map(favoriteId)).toEqual([favoriteId(B)]);
+  });
+
+  it("keeps the in-memory list when there's no store to merge against", () => {
+    const { favorites, ok } = commitFavorites(null, [A], (current) => addFavorite(current, B));
+
+    expect(ok).toBe(false);
+    expect(favorites.map(favoriteId)).toEqual([favoriteId(A), favoriteId(B)]);
+  });
+
+  it("reports a failed write so the caller can say so", () => {
+    const { ok } = commitFavorites(memoryStore({}, true), [], (current) => addFavorite(current, A));
+    expect(ok).toBe(false);
   });
 });
