@@ -534,11 +534,13 @@
   }
 }
 
-@container (max-width: 640px) {
+/* The nav runs out of room long before the rest of the mock does: a brand,
+   four links, and two buttons need ~860px. Below that it drops the links to
+   their own row rather than letting the CTA clip against the card edge. */
+@container (max-width: 860px) {
   .mock-nav {
     flex-wrap: wrap;
     gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
   }
 
   .mock-nav__links {
@@ -546,12 +548,18 @@
     width: 100%;
     gap: var(--space-4);
     overflow-x: auto;
-    /* The nav scrolls within itself; the page never scrolls sideways. */
+    /* The link row scrolls within itself; the page never scrolls sideways. */
     scrollbar-width: none;
   }
 
   .mock-nav__links::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@container (max-width: 640px) {
+  .mock-nav {
+    padding: var(--space-3) var(--space-4);
   }
 
   .mock-hero {
