@@ -74,12 +74,14 @@ export function App() {
 
       <header className="shell__head">
         <div className="brand">
-          {/* The wordmark is the demo: each half renders in the live pairing. */}
-          <h1 className="brand__mark">
-            <span className="brand__type" style={{ fontFamily: display.stack }}>
+          {/* The wordmark is the demo: each half renders in the live pairing.
+              Splitting it across two elements makes the accessible name compute
+              as "Type match", so the whole name is stated once here instead. */}
+          <h1 className="brand__mark" aria-label="Typematch">
+            <span className="brand__type" style={{ fontFamily: display.stack }} aria-hidden="true">
               Type
             </span>
-            <span className="brand__match" style={{ fontFamily: ui.stack }}>
+            <span className="brand__match" style={{ fontFamily: ui.stack }} aria-hidden="true">
               match
             </span>
           </h1>
