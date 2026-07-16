@@ -82,3 +82,17 @@ afterthought.
     via Tab key in a logical order and show a visible focus ring.
   - Icon-only buttons have `aria-label`s; the score readout sits in an ARIA live region so score
     changes are announced.
+
+## Deferred — noted, not built
+
+- [ ] **5.1 Live specimen in the picker results** — VISION's "v1 done" describes each search result
+      showing a live specimen in its own face. Deliberately skipped in BUILD: rendering 8 results
+      in their own fonts means 8 stylesheet fetches per keystroke against the Google Fonts CDN.
+      Needs debouncing plus a lazy per-option loader (IntersectionObserver) to be viable.
+  - Each visible result renders its family name in its own face within 500ms of the list
+    settling, without issuing a request per keystroke.
+- [ ] **5.2 Weight/style selection per slot** — VISION mentions picking variants. The catalog
+      already carries each family's weights and the loader requests them all; only the UI to
+      choose one is missing.
+  - Choosing a weight for either slot re-renders the mock in that weight and survives a
+    shared-link round trip.
