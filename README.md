@@ -26,7 +26,7 @@ actually looks like a shipped product or just a specimen sheet.
 
 ## Features
 
-- **Dual font picker** with search across 116 Google Fonts families — keyboard-driven, with
+- **Dual font picker** with search across 112 Google Fonts families — keyboard-driven, with
   category and weight metadata on every result.
 - **A whole fake product**, not text samples: nav bar, marketing hero with stat row, a
   three-tier pricing grid, and a signup form with labels, helper text, an error state, and a
