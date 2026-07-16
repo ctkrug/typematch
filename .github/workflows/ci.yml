@@ -27,3 +27,8 @@ jobs:
       - run: npm run typecheck
       - run: npm run test
       - run: npm run build
+
+      # site/ is the published bundle and is committed, so a source change
+      # without a rebuild would silently deploy the previous version.
+      - name: Check the committed site/ bundle matches the source
+        run: git diff --exit-code -- site/
