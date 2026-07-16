@@ -20,41 +20,67 @@ actually looks like a shipped product or just a specimen sheet.
 - Paste (or pick) two Google Fonts — one display, one UI/body.
 - A fake app UI re-renders live in that pairing: pricing card, signup form, nav bar, buttons,
   and form controls — not isolated text samples.
-- A contrast/readability score is computed from the rendered font metrics (x-height, weight,
-  letter-spacing) against WCAG contrast math, so you get a number, not just a vibe.
+- A contrast/readability score is computed from the rendered font metrics (x-height,
+  cap-height, character width) against WCAG contrast math, so you get a number, not just a vibe.
 - Swap either font and everything re-renders instantly, with no layout jank.
 
-## Planned features
+## Features
 
-- [ ] Live dual Google Fonts picker with search and weight/style selection
-- [ ] Fake app UI preview: nav bar, hero, pricing card, signup form, buttons, inputs
-- [ ] Contrast/readability scorer wired to real rendered font metrics
-- [ ] Shareable pairing links (encode the pair + theme in the URL)
-- [ ] Light/dark preview toggle
-- [ ] Pairing history / favorites (local storage)
+- **Dual font picker** with search across 116 Google Fonts families — keyboard-driven, with
+  category and weight metadata on every result.
+- **A whole fake product**, not text samples: nav bar, marketing hero with stat row, a
+  three-tier pricing grid, and a signup form with labels, helper text, an error state, and a
+  disabled button. Small type is sized honestly (12–13px), because that's where pairings fail.
+- **A readability score out of 100**, with a breakdown: text contrast (real WCAG 2.x math),
+  body legibility (measured x-height ÷ cap-height), and pairing contrast (how distinguishable
+  the two faces actually are). Every factor gets a plain-language verdict, not just a bar.
+- **Flash-free swaps** — the current font keeps painting until the next face has downloaded, so
+  changing a font never flashes the fallback.
+- **Shareable links** — the pairing and theme live in the URL; copy the link and it restores
+  exactly.
+- **Saved pairings** in localStorage, and a light/dark preview toggle that persists.
+
+## How the score works
+
+| Factor           | Weight | Measured from                                              |
+| ---------------- | ------ | ---------------------------------------------------------- |
+| Text contrast    | 0.40   | WCAG 2.x contrast ratio of the preview's text vs background |
+| Body legibility  | 0.30   | the UI font's rendered x-height ÷ cap-height                |
+| Pairing contrast | 0.30   | how far the two faces' metrics and categories diverge       |
+
+Metrics come from measuring the *actual rasterized glyphs* via canvas, not a lookup table of
+curated pairings — so it works for any pairing you throw at it. Contrast carries the most
+weight because it's the only factor with an objective pass/fail, and **any failing factor caps
+the overall score**: a healthy x-height should never average away text that fails WCAG.
 
 ## Stack
 
 - TypeScript + React, built with Vite
-- Google Fonts API for font metadata and dynamic loading
-- Vitest for unit tests
-- Static output — no server required, deployable to any static host
+- Google Fonts CSS2 CDN for font loading — **no API key, no backend, no secrets**
+- Vitest + React Testing Library
+- Static output — deployable to any static host, including a subpath
 
 ## Status
 
-Early scaffold. See [`docs/VISION.md`](docs/VISION.md) for the product vision,
+Core feature set is functionally complete: pairing preview, scoring, sharing, and favorites all
+work end-to-end. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the codebase map,
+[`docs/VISION.md`](docs/VISION.md) for the product vision,
 [`docs/DESIGN.md`](docs/DESIGN.md) for the art direction, and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+[`docs/BACKLOG.md`](docs/BACKLOG.md) for what's left.
 
 ## Development
 
 ```bash
 npm install
-npm run dev      # start the dev server
-npm run build     # production build to dist/
-npm run test      # run the test suite
-npm run lint      # lint the codebase
+npm run dev        # start the dev server
+npm run build      # production build to dist/
+npm run preview    # serve the production build
+npm test           # run the test suite (no network needed)
+npm run typecheck  # tsc --noEmit
+npm run lint       # lint the codebase
 ```
+
+The test suite injects its own font loader, so it never hits the network and stays fast.
 
 ## Deploy
 
