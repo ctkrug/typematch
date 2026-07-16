@@ -1,8 +1,8 @@
-# Typematch — Design
+# Typebed — Design
 
 ## Aesthetic direction
 
-**Editorial serif.** Typematch is a typography tool, so the chrome itself should read like a
+**Editorial serif.** Typebed is a typography tool, so the chrome itself should read like a
 well-set page, not a SaaS dashboard: warm paper background, ink-black text, a single terracotta
 accent, generous margins, and a serif display face doing the talking. Think a well-typeset
 magazine spread, not a dark "developer tool" console — nothing else in the recent portfolio has
@@ -60,10 +60,13 @@ Fonts CDN) — independent of whatever pairing the user is previewing inside the
 
 ## Signature detail
 
-**The wordmark IS the demo.** "Typematch" in the header is set with the first word rendered in
-the user's chosen **display** font and the second half in their chosen **UI** font, live —
-swapping either font pairing updates the logotype itself before the user even looks at the
-preview below. Zero extra UI needed; the product's core value is visible in the brand mark.
+**The wordmark IS the demo.** "Typebed" in the header is set with "Type" rendered in the user's
+chosen **display** font and "bed" in their chosen **UI** font, live — swapping either half of the
+pairing updates the logotype itself before the user even looks at the preview below. Zero extra
+UI needed; the product's core value is visible in the brand mark.
+
+This is why the name has to stay a two-part compound: the mark is load-bearing, not decoration.
+The favicon carries the same idea in miniature, a serif `T` beside a sans `b`.
 
 ## Motion
 

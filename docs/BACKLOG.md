@@ -1,4 +1,4 @@
-# Typematch — Backlog
+# Typebed — Backlog
 
 Epics ship in order. Every story has verifiable acceptance criteria — checks a later run can
 confirm true/false, not vibes. "Design polish" stories are scheduled per epic, not an
@@ -73,7 +73,7 @@ afterthought.
   - At 390px, 768px, and 1440px the control rail, preview, and score panel compose without
     overlap or horizontal scroll, matching `docs/DESIGN.md`'s layout intent.
 - [x] **4.2 Static build for subpath hosting**
-  - `npm run build` produces a `dist/` directory that loads correctly when served from a
+  - `npm run build` produces a `site/` directory that loads correctly when served from a
     non-root subpath (built asset URLs use relative paths, no leading `/`).
   - `npm run preview` serves the built site with fonts, favicon, and preview UI all rendering
     correctly.

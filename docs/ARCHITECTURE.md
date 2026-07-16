@@ -1,4 +1,4 @@
-# Typematch — Architecture
+# Typebed — Architecture
 
 A map of the codebase for anyone (human or agent) picking it up cold.
 See [VISION.md](./VISION.md) for _why_, [DESIGN.md](./DESIGN.md) for the visual system,
@@ -19,7 +19,7 @@ src/
   scoring/                 contrast math, glyph measurement, the score model
   controls/                the tool's own chrome: pickers, score panel, toggle, share, favorites
   state/                   URL codec + localStorage favorites (+ cross-tab merge)
-  styles/                  global tokens (global.css) + app chrome (app-shell.css)
+  styles/                  global tokens (global.css), app chrome (app-shell.css), back matter (page.css)
   test/setup.ts            jest-dom matchers + auto-cleanup
 ```
 
@@ -128,6 +128,10 @@ Two layers, both plain CSS (no framework):
 - `styles/global.css` — the design tokens from DESIGN.md as `:root` custom properties, plus the
   chrome's own Fraunces/Inter webfont import.
 - `styles/app-shell.css` — the tool chrome (paper background, rail, pickers, score, favorites).
+- `styles/page.css` — the back matter below the tool (what it is, how the score works, the FAQ).
+  That section is **static HTML in `index.html`**, not React: it's the copy search engines need,
+  so it ships in the source rather than behind hydration. It restates the CTA button rather than
+  reusing app-shell's, which arrives with the bundle and would flash it unstyled.
 - `preview/preview.css` — the mock product, scoped under `.preview` and driven entirely by the
   `--preview-*` props set on the wrapper. It uses **container queries**, not media queries: the
   preview is a resizable panel, so it must respond to its own width, not the window's.
@@ -143,7 +147,7 @@ npm test               # vitest (jsdom) — 250+ tests, no network
 npm run coverage      # v8 coverage report
 npm run typecheck      # tsc -b --noEmit
 npm run lint           # eslint (zero warnings expected)
-npm run build          # tsc -b && vite build → dist/
+npm run build          # tsc -b && vite build → site/ (committed)
 npm run preview        # serve the built bundle
 ```
 
@@ -159,7 +163,7 @@ browser, not in the suite.
 
 **Subpath hosting:** `vite.config.ts` sets `base: "./"`, so every built asset path is relative
 and the bundle works at `apps.charliekrug.com/typematch/`. Any leading-slash asset path is a
-bug. Verified by serving `dist/` from a `/typematch/` prefix.
+bug. Verified by serving `site/` from a `/typematch/` prefix.
 
 ## Conventions
 
