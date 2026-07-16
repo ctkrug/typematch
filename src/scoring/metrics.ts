@@ -20,6 +20,11 @@ export interface FontMetrics {
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
+/** A real, usable measurement: finite and above zero. */
+function isPositive(value: number): boolean {
+  return Number.isFinite(value) && value > 0;
+}
+
 /**
  * A canvas-backed measurer, or null where canvas text metrics don't exist
  * (jsdom, very old browsers). Callers must handle null — the score degrades
@@ -66,7 +71,11 @@ export function measureFontMetrics(
   const cap = font("H");
   const alphabet = font(ALPHABET);
   if (!x || !cap || !alphabet) return null;
-  if (x.ascent <= 0 || cap.ascent <= 0 || alphabet.width <= 0) return null;
+
+  // Number.isFinite, not `> 0`: a NaN escapes every comparison (NaN <= 0 is
+  // false), so a rasterizer reporting garbage for one probe would otherwise
+  // yield metrics that look valid and score as NaN on screen.
+  if (!isPositive(x.ascent) || !isPositive(cap.ascent) || !isPositive(alphabet.width)) return null;
 
   const xHeight = x.ascent / sizePx;
   const capHeight = cap.ascent / sizePx;
