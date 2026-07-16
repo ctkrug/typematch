@@ -1,13 +1,17 @@
 import { createFontLoader, type FontLoader } from "./loader";
 import type { FontFamily } from "./types";
 
-const LINK_ATTR = "data-typematch-font";
+/** Marks the link tags this module owns, so it never touches anyone else's. */
+export const LINK_ATTR = "data-typematch-font";
 
 /**
  * Append a Google Fonts stylesheet and resolve when the browser has fetched it.
  * Reuses an existing tag for the same URL so a remount can't duplicate links.
+ *
+ * Exported for tests: jsdom never fetches, so the only way to exercise the
+ * reuse and the dead-tag cleanup is to drive the link's events directly.
  */
-function loadStylesheet(url: string): Promise<void> {
+export function loadStylesheet(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector<HTMLLinkElement>(
       `link[${LINK_ATTR}][href="${CSS.escape(url)}"]`,
@@ -40,7 +44,7 @@ function loadStylesheet(url: string): Promise<void> {
  * @font-face rules; without this the family is "available" but not yet
  * painted, which is exactly the fallback flash the preview must avoid.
  */
-async function loadFaces(font: FontFamily): Promise<void> {
+export async function loadFaces(font: FontFamily): Promise<void> {
   if (typeof document === "undefined" || !("fonts" in document)) return;
   const weights = font.weights.length > 0 ? font.weights : [400];
   await Promise.all(
