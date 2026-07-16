@@ -23,6 +23,9 @@
   left: -9999px;
   top: var(--space-2);
   z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   background: var(--color-accent);
@@ -128,8 +131,10 @@
     box-shadow var(--motion-ui);
 }
 
+/* Visually smaller, but still a 44px touch target — the compact look comes
+   from the type and padding, not from a target a thumb can't hit. */
 .btn--sm {
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 var(--space-3);
   font-size: 0.8125rem;
 }
@@ -344,7 +349,7 @@
 }
 
 .toggle__option {
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 var(--space-4);
   border: 0;
   border-radius: 3px;
