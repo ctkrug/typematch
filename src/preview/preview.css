@@ -1,0 +1,585 @@
+/*
+ * The mock product surface. Everything here is scoped under `.preview` and
+ * driven by the --preview-* custom properties set by PreviewApp, so a font or
+ * theme swap is one style write on the wrapper — never a cascade rewrite.
+ *
+ * Type sizes are deliberate: the small end (12–13px labels, fine print) is
+ * where a pairing actually fails, so it is not rounded up for comfort.
+ */
+
+.preview {
+  container-type: inline-size;
+  background: var(--preview-bg);
+  color: var(--preview-text);
+  font-family: var(--preview-ui);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  /* Lifts the mock off the tool's paper so it reads as a separate product. */
+  box-shadow:
+    0 1px 2px rgba(34, 27, 18, 0.1),
+    0 18px 44px rgba(34, 27, 18, 0.16);
+  border: 1px solid var(--preview-border);
+  transition:
+    background var(--motion-ui),
+    color var(--motion-ui);
+}
+
+.preview__page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+/* ---------- shared mock primitives ---------- */
+
+.mock-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--preview-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  transition:
+    transform var(--motion-feedback),
+    background var(--motion-ui),
+    border-color var(--motion-ui);
+}
+
+.mock-btn--sm {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  font-size: 0.8125rem;
+}
+
+.mock-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.mock-btn--accent {
+  background: var(--preview-accent);
+  color: var(--preview-on-accent);
+}
+
+.mock-btn--outline {
+  border-color: var(--preview-border);
+  color: var(--preview-text);
+  background: transparent;
+}
+
+.mock-btn--ghost {
+  color: var(--preview-text);
+  background: transparent;
+}
+
+.mock-btn--disabled {
+  border-color: var(--preview-border);
+  color: var(--preview-muted);
+  background: var(--preview-surface-alt);
+  opacity: 0.7;
+}
+
+/* The mock's controls are presentational, but they still demo hover/press —
+   a pairing has to survive a button that moves, not just a static label. */
+.preview:hover .mock-btn--accent:hover,
+.preview:hover .mock-btn--outline:hover {
+  transform: translateY(-1px);
+}
+
+.mock-btn--accent:active,
+.mock-btn--outline:active {
+  transform: translateY(1px);
+}
+
+.mock-btn--disabled:hover,
+.mock-btn--disabled:active {
+  transform: none;
+}
+
+.mock-section__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--preview-display);
+  font-size: clamp(1.5rem, 2.4cqi + 1rem, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.mock-section__lede {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--preview-muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.mock-card__check {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--preview-accent);
+  opacity: 0.85;
+  /* A checkmark punched out of the dot — no icon font, no asset. */
+  clip-path: polygon(
+    22% 48%,
+    38% 64%,
+    76% 26%,
+    86% 36%,
+    38% 84%,
+    12% 58%
+  );
+}
+
+/* ---------- nav ---------- */
+
+.mock-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-6);
+  background: var(--preview-surface);
+  border-bottom: 1px solid var(--preview-border);
+}
+
+.mock-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--preview-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.mock-nav__mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--preview-accent), color-mix(in oklab, var(--preview-accent) 55%, #000));
+  transform: rotate(-12deg);
+}
+
+.mock-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mock-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--preview-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.mock-nav__link--current {
+  color: var(--preview-text);
+  font-weight: 600;
+}
+
+.mock-nav__pill {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--preview-surface-alt);
+  color: var(--preview-accent);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mock-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+/* ---------- hero ---------- */
+
+.mock-hero {
+  padding: var(--space-8) var(--space-6) 0;
+  max-width: 68ch;
+}
+
+.mock-hero__eyebrow {
+  margin: 0 0 var(--space-3);
+  color: var(--preview-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mock-hero__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--preview-display);
+  font-size: clamp(2rem, 5cqi + 0.5rem, 3.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.mock-hero__lede {
+  margin: 0 0 var(--space-5);
+  max-width: 58ch;
+  color: var(--preview-muted);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.mock-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.mock-hero__fine {
+  margin: 0 0 var(--space-6);
+  color: var(--preview-muted);
+  font-size: 0.75rem;
+}
+
+.mock-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-7);
+  margin: 0;
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--preview-border);
+}
+
+.mock-stat__label {
+  color: var(--preview-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mock-stat__value {
+  margin: var(--space-1) 0 0;
+  font-family: var(--preview-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ---------- pricing ---------- */
+
+.mock-pricing {
+  padding: 0 var(--space-6);
+}
+
+.mock-pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.mock-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--preview-border);
+  border-radius: var(--radius-md);
+  background: var(--preview-surface);
+  transition:
+    transform var(--motion-ui),
+    box-shadow var(--motion-ui);
+}
+
+.mock-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+}
+
+.mock-card--featured {
+  position: relative;
+  border-color: var(--preview-accent);
+  box-shadow: 0 0 0 1px var(--preview-accent);
+}
+
+.mock-card__badge {
+  position: absolute;
+  top: calc(-1 * var(--space-3));
+  left: var(--space-5);
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--preview-accent);
+  color: var(--preview-on-accent);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mock-card__name {
+  margin: 0;
+  font-family: var(--preview-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.mock-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.mock-card__amount {
+  font-family: var(--preview-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.mock-card__cadence {
+  color: var(--preview-muted);
+  font-size: 0.75rem;
+}
+
+.mock-card__blurb {
+  margin: 0;
+  color: var(--preview-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.mock-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+
+.mock-card__features li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  line-height: 1.4;
+}
+
+.mock-card .mock-btn {
+  margin-top: auto;
+}
+
+/* ---------- signup ---------- */
+
+.mock-signup {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  margin: 0 var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--preview-border);
+  border-radius: var(--radius-md);
+  background: var(--preview-surface-alt);
+}
+
+.mock-signup__points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.mock-signup__points li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mock-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--preview-border);
+  border-radius: var(--radius-md);
+  background: var(--preview-surface);
+}
+
+.mock-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.mock-label {
+  color: var(--preview-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mock-input {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--preview-border);
+  border-radius: var(--radius-sm);
+  background: var(--preview-bg);
+  color: var(--preview-text);
+  font-size: 0.9375rem;
+  transition: border-color var(--motion-ui);
+}
+
+.mock-input:hover {
+  border-color: var(--preview-accent);
+}
+
+.mock-input--invalid {
+  border-color: var(--color-danger);
+  letter-spacing: 0.1em;
+}
+
+.mock-input--select {
+  justify-content: space-between;
+  background: var(--preview-surface);
+}
+
+.mock-input__caret {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--preview-muted);
+  border-bottom: 2px solid var(--preview-muted);
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.mock-help {
+  color: var(--preview-muted);
+  font-size: 0.75rem;
+}
+
+.mock-error {
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.mock-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.mock-check__box {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1px solid var(--preview-border);
+  border-radius: 3px;
+  background: var(--preview-bg);
+}
+
+.mock-check__text {
+  color: var(--preview-muted);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.mock-form__fine {
+  margin: 0;
+  color: var(--preview-muted);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+}
+
+.mock-link {
+  color: var(--preview-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- responsive ---------- */
+
+/* Container queries, not viewport ones: the preview is a resizable panel
+   inside the tool, so it must respond to its own width, not the window's. */
+@container (min-width: 720px) {
+  .mock-signup {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+@container (max-width: 640px) {
+  .mock-nav {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .mock-nav__links {
+    order: 3;
+    width: 100%;
+    gap: var(--space-4);
+    overflow-x: auto;
+    /* The nav scrolls within itself; the page never scrolls sideways. */
+    scrollbar-width: none;
+  }
+
+  .mock-nav__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mock-hero {
+    padding: var(--space-6) var(--space-4) 0;
+  }
+
+  .mock-pricing {
+    padding: 0 var(--space-4);
+  }
+
+  .mock-signup {
+    margin: 0 var(--space-4);
+    padding: var(--space-4);
+  }
+
+  .mock-stats {
+    gap: var(--space-5);
+  }
+
+  .preview__page {
+    gap: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mock-card:hover,
+  .mock-btn:hover,
+  .mock-btn:active {
+    transform: none;
+  }
+}
