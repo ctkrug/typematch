@@ -44,10 +44,8 @@ describe("FontPicker keyboard contract", () => {
     const { onChange, input } = renderPicker();
 
     await user.click(input);
-    const last = screen
-      .getAllByRole("option")
-      .at(-1)!
-      .querySelector(".picker__option-name")!.textContent;
+    const options = screen.getAllByRole("option");
+    const last = options[options.length - 1].querySelector(".picker__option-name")!.textContent;
 
     await user.keyboard("{ArrowUp}{Enter}");
 
