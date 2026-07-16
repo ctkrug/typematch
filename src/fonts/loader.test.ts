@@ -121,7 +121,7 @@ describe("createFontLoader", () => {
 
   it("lets a retry recover after a failure", async () => {
     const loadStylesheet = vi
-      .fn<[string], Promise<void>>()
+      .fn(noop)
       .mockRejectedValueOnce(new Error("blip"))
       .mockResolvedValue(undefined);
     const loader = createFontLoader({ loadStylesheet, loadFaces: noop });
