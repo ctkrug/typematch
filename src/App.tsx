@@ -51,6 +51,8 @@ export function App() {
     uiStack: ui.stack,
     displayCategory: display.font.category,
     uiCategory: ui.font.category,
+    displayFamily: display.font.family,
+    uiFamily: ui.font.family,
     theme: pairing.theme,
     revision: `${display.revision}:${ui.revision}`,
   });

@@ -59,18 +59,23 @@ describe("legibilityScore", () => {
   });
 
   it("penalizes an x-height below the band", () => {
-    expect(legibilityScore(0.6)).toBeCloseTo(60, 5);
-    expect(legibilityScore(0.5)).toBeCloseTo(10, 5);
+    expect(legibilityScore(0.6)).toBeCloseTo(44, 5);
+    expect(legibilityScore(0.5)).toBeCloseTo(0, 5);
   });
 
   it("penalizes an x-height above the band", () => {
-    expect(legibilityScore(0.86)).toBeCloseTo(70, 5);
+    expect(legibilityScore(0.86)).toBeCloseTo(76, 5);
+  });
+
+  it("punishes a too-small x-height harder than a too-large one", () => {
+    // A cramped body face hurts 13px labels; a roomy one only costs elegance.
+    const below = legibilityScore(0.68 - 0.06);
+    const above = legibilityScore(0.8 + 0.06);
+    expect(below).toBeLessThan(above);
   });
 
   it("clamps to 0 rather than going negative for an extreme face", () => {
     expect(legibilityScore(0.1)).toBe(0);
-    // 1.0 lands exactly on the zero boundary, so allow for float error there.
-    expect(legibilityScore(1)).toBeCloseTo(0, 6);
     expect(legibilityScore(1.5)).toBe(0);
   });
 });
@@ -170,12 +175,42 @@ describe("scorePairing", () => {
     expect(score.level).toBe("poor");
   });
 
-  it("calls out a font paired with itself as an accident", () => {
-    const score = scorePairing({ ...INK_ON_PAPER, display: ui, ui })!;
+  it("caps the overall when the same family fills both slots", () => {
+    const same = { ...ui, family: "Inter" };
+    const score = scorePairing({ ...INK_ON_PAPER, display: same, ui: same })!;
+
+    expect(score.overall).toBeLessThan(WARN_THRESHOLD);
+  });
+
+  it("does not let a heuristic factor veto an otherwise sound pairing", () => {
+    // Two same-category faces score low on distinction, but the metrics can't
+    // see skeleton — a condensed sans display over a neutral sans body is a
+    // real pairing and must not be condemned to "needs work" on that alone.
+    const condensed = {
+      metrics: metrics({ xHeightRatio: 0.716, avgCharWidth: 0.3997 }),
+      category: "sans-serif" as const,
+      family: "Oswald",
+    };
+    const body = {
+      metrics: metrics({ xHeightRatio: 0.748, avgCharWidth: 0.5352 }),
+      category: "sans-serif" as const,
+      family: "Inter",
+    };
+
+    const score = scorePairing({ ...INK_ON_PAPER, display: condensed, ui: body })!;
+
+    expect(score.factors.find((f) => f.id === "distinction")!.level).toBe("poor");
+    expect(score.overall).toBeGreaterThan(WARN_THRESHOLD);
+  });
+
+  it("calls out the same font in both slots as no pairing at all", () => {
+    const same = { ...ui, family: "Inter" };
+    const score = scorePairing({ ...INK_ON_PAPER, display: same, ui: same })!;
     const distinction = score.factors.find((f) => f.id === "distinction")!;
 
     expect(distinction.score).toBe(0);
-    expect(distinction.verdict).toMatch(/near-identical/i);
+    expect(distinction.readout).toBe("same family");
+    expect(distinction.verdict).toMatch(/same font twice/i);
   });
 
   it("gives every factor a readout and a non-empty verdict", () => {

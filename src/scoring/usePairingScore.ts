@@ -9,6 +9,8 @@ export interface UsePairingScoreInput {
   uiStack: string;
   displayCategory: FontCategory;
   uiCategory: FontCategory;
+  displayFamily: string;
+  uiFamily: string;
   theme: Theme;
   /**
    * Changes whenever either slot commits a new render.
@@ -31,7 +33,8 @@ export interface UsePairingScoreInput {
  * change.
  */
 export function usePairingScore(input: UsePairingScoreInput): PairingScore | null {
-  const { displayStack, uiStack, displayCategory, uiCategory, theme, revision } = input;
+  const { displayStack, uiStack, displayCategory, uiCategory, displayFamily, uiFamily, theme, revision } =
+    input;
 
   // One canvas for the app's lifetime; allocating per measurement is wasteful
   // and, in some engines, leaks until GC.
@@ -45,12 +48,22 @@ export function usePairingScore(input: UsePairingScoreInput): PairingScore | nul
     return scorePairing({
       textColor: palette.text,
       bgColor: palette.bg,
-      display: { metrics: displayMetrics, category: displayCategory },
-      ui: { metrics: uiMetrics, category: uiCategory },
+      display: { metrics: displayMetrics, category: displayCategory, family: displayFamily },
+      ui: { metrics: uiMetrics, category: uiCategory, family: uiFamily },
     });
     // `revision` looks unused to the lint rule, but it stands in for "the
     // painted pixels changed" — dropping it freezes the score on the fallback
     // measured at first paint. See the doc comment above.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayStack, uiStack, displayCategory, uiCategory, theme, measurer, revision]);
+  }, [
+    displayStack,
+    uiStack,
+    displayCategory,
+    uiCategory,
+    displayFamily,
+    uiFamily,
+    theme,
+    measurer,
+    revision,
+  ]);
 }
