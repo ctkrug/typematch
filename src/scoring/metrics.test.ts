@@ -86,8 +86,7 @@ describe("measureFontMetrics", () => {
 describe("measureFontMetrics — hostile measurements", () => {
   /** A measurer that reports garbage for one probe and sane numbers otherwise. */
   function poisoned(text: string, box: { width: number; ascent: number }): MeasureText {
-    return (probe, cssFont) =>
-      probe === text ? box : fakeMeasurer(HELVETICA_ISH)(probe, cssFont);
+    return (probe, cssFont) => (probe === text ? box : fakeMeasurer(HELVETICA_ISH)(probe, cssFont));
   }
 
   // "Unmeasurable" must mean null, never a number built from garbage: a NaN
