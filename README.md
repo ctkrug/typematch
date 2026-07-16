@@ -1,5 +1,7 @@
 # Typematch
 
+[![CI](https://github.com/ctkrug/typematch/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/typematch/actions/workflows/ci.yml)
+
 Paste two Google Fonts. Instantly see the pairing across a real UI — not a headline-and-paragraph
 mockup, an entire fake app: a nav bar, a pricing card, a signup form — plus a live
 contrast/readability score computed from the actual rendered font metrics.
@@ -39,7 +41,8 @@ actually looks like a shipped product or just a specimen sheet.
 
 ## Status
 
-Early scaffold. See [`docs/VISION.md`](docs/VISION.md) for the product vision and
+Early scaffold. See [`docs/VISION.md`](docs/VISION.md) for the product vision,
+[`docs/DESIGN.md`](docs/DESIGN.md) for the art direction, and
 [`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
 
 ## Development
