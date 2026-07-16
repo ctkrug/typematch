@@ -18,7 +18,7 @@ src/
   preview/                 the fake product UI (the wow moment) + its palettes
   scoring/                 contrast math, glyph measurement, the score model
   controls/                the tool's own chrome: pickers, score panel, toggle, share, favorites
-  state/                   URL codec + localStorage favorites
+  state/                   URL codec + localStorage favorites (+ cross-tab merge)
   styles/                  global tokens (global.css) + app chrome (app-shell.css)
   test/setup.ts            jest-dom matchers + auto-cleanup
 ```
@@ -97,6 +97,25 @@ Playfair Display + Cormorant Garamond 68 · the same font twice 59.
 `scoring/metrics.ts` measures at 200px because the glyph bounding box comes back in near-integer
 units; at 16px the rounding error exceeds the differences between fonts.
 
+## Shared state: the URL and localStorage
+
+Two invariants here were each a real bug, so they're written down:
+
+- **The share URL is built from the pairing, never read back from
+  `window.location`.** The address bar is written by an effect that runs _after_ render, so
+  anything reading `location.href` during render sees the _previous_ pairing. That's what
+  `pairingUrl(pairing, base)` is for. A theme flip loads no font and so triggers no later
+  re-render — it leaves a stale link stale forever.
+- **Favorites are shared mutable state.** A second tab may have written since this one mounted,
+  so `commitFavorites` re-reads storage and merges at write time rather than blindly writing a
+  mount-time snapshot back (which silently destroyed the other tab's saves). The `storage`
+  event keeps a background tab's list live; it fires only in _other_ tabs, so it can't echo our
+  own writes.
+
+Everything read from a URL or from storage is untrusted: unknown families, bogus themes, and
+truncated or hand-edited JSON each fall back per-field, so one bad value can't take the app
+down or discard a good neighbouring one.
+
 ## Styling
 
 Two layers, both plain CSS (no framework):
@@ -114,13 +133,24 @@ The mock's controls are presentational `<span>`s, not real buttons/inputs. That'
 ## Run / test
 
 ```bash
-npm run dev        # vite dev server
-npm test           # vitest (jsdom) — 180+ tests, no network
-npm run typecheck  # tsc -b --noEmit
-npm run lint       # eslint (zero warnings expected)
-npm run build      # tsc -b && vite build → dist/
-npm run preview    # serve the built bundle
+npm run dev            # vite dev server
+npm test               # vitest (jsdom) — 250+ tests, no network
+npm test -- --coverage # v8 coverage report
+npm run typecheck      # tsc -b --noEmit
+npm run lint           # eslint (zero warnings expected)
+npm run build          # tsc -b && vite build → dist/
+npm run preview        # serve the built bundle
 ```
+
+Pure logic (contrast, score, parsers) also carries **property-based tests** (fast-check, the
+`*.property.test.ts` files): they state the laws — symmetry, monotonicity, the veto rules —
+that example tests can only sample.
+
+**jsdom exposes no canvas text metrics**, which shapes the suite more than anything else: every
+test that goes through the real app hits the `measured: false`, contrast-only path. Components
+that render the full breakdown (`ScorePanel`) are therefore tested by feeding them a
+`PairingScore` directly. Anything about _measured_ scoring has to be verified in a real
+browser, not in the suite.
 
 **Subpath hosting:** `vite.config.ts` sets `base: "./"`, so every built asset path is relative
 and the bundle works at `apps.charliekrug.com/typematch/`. Any leading-slash asset path is a
