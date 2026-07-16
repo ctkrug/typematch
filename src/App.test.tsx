@@ -33,7 +33,7 @@ describe("App", () => {
   it("renders the wordmark, the pickers, and the live preview", async () => {
     renderApp();
 
-    expect(screen.getByRole("heading", { level: 1, name: /typematch/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /typebed/i })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /display font/i })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /ui font/i })).toBeInTheDocument();
     expect(await screen.findByTestId("preview")).toBeInTheDocument();
@@ -261,7 +261,7 @@ describe("App", () => {
 
     // Degraded, not blank: the mock still renders and the tool says why.
     expect(await screen.findByTestId("preview")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: /typematch/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /typebed/i })).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByText(/didn't load/i).length).toBeGreaterThan(0));
     expect(screen.getByTestId("preview").style.getPropertyValue("--preview-display")).not.toContain(
       "Fraunces",

@@ -60,12 +60,13 @@
 }
 
 /* The two halves are set in the live pairing — the mark itself is the demo,
-   swapping before the eye even reaches the preview below. */
-.brand__type {
+   swapping before the eye even reaches the preview below. Each half is named
+   for the slot it demos, not for the syllable it happens to spell. */
+.brand__display {
   font-weight: 700;
 }
 
-.brand__match {
+.brand__ui {
   font-weight: 400;
   color: var(--color-accent);
 }

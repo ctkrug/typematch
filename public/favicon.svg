@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Typematch">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Typebed">
   <rect width="64" height="64" rx="14" fill="#C1502E" />
   <text
-    x="17"
+    x="15"
     y="43"
     font-family="Georgia, 'Times New Roman', serif"
     font-size="30"
@@ -9,12 +9,12 @@
     fill="#FAF6EC"
   >T</text>
   <text
-    x="34"
+    x="33"
     y="43"
     font-family="-apple-system, 'Segoe UI', sans-serif"
     font-size="24"
     font-weight="600"
     fill="#F0E7D5"
     opacity="0.85"
-  >t</text>
+  >b</text>
 </svg>
