@@ -217,10 +217,18 @@ export function scorePairing(input: ScoreInput): PairingScore | null {
     factors.push(distinctionFactor(displayMeasured, uiMeasured));
   }
 
-  const overall = measured
+  const weighted = measured
     ? factors.reduce((sum, factor) => sum + factor.score * WEIGHTS[factor.id], 0)
     : factors[0].score;
 
-  const rounded = Math.round(overall);
+  // A weighted average lets one real defect hide behind two good factors —
+  // text that fails WCAG would still score "fair" on the strength of a nice
+  // x-height. Any poor factor therefore caps the overall below the warning
+  // threshold: the pairing has a defect, and the number has to say so.
+  const capped = factors.some((factor) => factor.level === "poor")
+    ? Math.min(weighted, WARN_THRESHOLD - 1)
+    : weighted;
+
+  const rounded = Math.round(capped);
   return { overall: rounded, level: levelOf(rounded), factors, measured };
 }
