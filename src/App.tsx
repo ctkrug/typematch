@@ -9,6 +9,7 @@ import { PreviewApp } from "./preview/PreviewApp";
 import type { Theme } from "./preview/theme";
 import { usePairingScore } from "./scoring/usePairingScore";
 import {
+  FAVORITES_KEY,
   addFavorite,
   commitFavorites,
   isFavorite,
@@ -76,6 +77,19 @@ export function App() {
     const next = `${window.location.pathname}?${encodePairing(pairing)}`;
     window.history.replaceState(null, "", next);
   }, [pairing]);
+
+  // Another tab saving is the same list changing under us. The `storage` event
+  // only fires in the *other* tabs, so this can't loop on our own writes.
+  useEffect(() => {
+    if (typeof window === "undefined" || !store) return;
+    function onStorage(event: StorageEvent) {
+      // A null key means the whole store was cleared, which concerns us too.
+      if (event.key !== null && event.key !== FAVORITES_KEY) return;
+      setFavorites(loadFavorites(store));
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [store]);
 
   // Every change is applied to storage as it stands at write time, so a save
   // in this tab can't wipe out one made in another.

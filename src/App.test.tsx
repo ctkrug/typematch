@@ -306,4 +306,28 @@ describe("App", () => {
     expect(url).toContain("display=Fraunces");
     expect(url).toContain("ui=Inter");
   });
+
+  it("picks up a pairing saved in another tab", async () => {
+    renderApp();
+    await screen.findByTestId("preview");
+    expect(screen.getByText(/nothing saved yet/i)).toBeInTheDocument();
+
+    // What a second tab's save looks like from in here.
+    const written = JSON.stringify([{ display: "Lora", ui: "Work Sans", theme: "light" }]);
+    window.localStorage.setItem(FAVORITES_KEY, written);
+    window.dispatchEvent(new StorageEvent("storage", { key: FAVORITES_KEY, newValue: written }));
+
+    expect(await screen.findByText("Lora")).toBeInTheDocument();
+    expect(screen.queryByText(/nothing saved yet/i)).not.toBeInTheDocument();
+  });
+
+  it("ignores storage events for keys it doesn't own", async () => {
+    renderApp();
+    await screen.findByTestId("preview");
+
+    window.dispatchEvent(new StorageEvent("storage", { key: "something:else", newValue: "[]" }));
+
+    expect(await screen.findByTestId("preview")).toBeInTheDocument();
+    expect(screen.getByText(/nothing saved yet/i)).toBeInTheDocument();
+  });
 });
