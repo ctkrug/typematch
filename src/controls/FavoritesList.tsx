@@ -3,7 +3,6 @@ import { favoriteId } from "../state/favorites";
 
 export interface FavoritesListProps {
   favorites: Pairing[];
-  current: Pairing;
   isSaved: boolean;
   onSave: () => void;
   onApply: (pairing: Pairing) => void;
@@ -14,7 +13,6 @@ export interface FavoritesListProps {
 
 export function FavoritesList({
   favorites,
-  current,
   isSaved,
   onSave,
   onApply,
