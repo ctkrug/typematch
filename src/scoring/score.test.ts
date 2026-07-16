@@ -118,6 +118,29 @@ describe("distinctionScore", () => {
   });
 });
 
+/**
+ * The good/fair/poor bands are inclusive at their lower edge — a score *of*
+ * 75 is good, not fair. Driven through real colors that land exactly on each
+ * boundary, since the bands are only observable via the published `level`.
+ */
+describe("scorePairing — level band boundaries", () => {
+  const levelOf = (textColor: string, bgColor: string) => scorePairing({ textColor, bgColor })!;
+
+  it("treats the bottom of the good band as good", () => {
+    expect(levelOf("#000000", "#747474")).toMatchObject({ overall: 75, level: "good" });
+    expect(levelOf("#000000", "#737373")).toMatchObject({ overall: 74, level: "fair" });
+  });
+
+  it("treats the bottom of the fair band as fair", () => {
+    expect(levelOf("#000000", "#656565")).toMatchObject({ overall: 60, level: "fair" });
+    expect(levelOf("#000000", "#646464")).toMatchObject({ overall: 59, level: "poor" });
+  });
+
+  it("puts the fair floor exactly at the warning threshold", () => {
+    expect(WARN_THRESHOLD).toBe(60);
+  });
+});
+
 describe("scorePairing", () => {
   const display = { metrics: metrics({ xHeightRatio: 0.62 }), category: "serif" as const };
   const ui = { metrics: metrics({ xHeightRatio: 0.74 }), category: "sans-serif" as const };
