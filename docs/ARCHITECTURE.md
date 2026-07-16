@@ -139,7 +139,7 @@ The mock's controls are presentational `<span>`s, not real buttons/inputs. That'
 ```bash
 npm run dev            # vite dev server
 npm test               # vitest (jsdom) — 250+ tests, no network
-npm test -- --coverage # v8 coverage report
+npm run coverage      # v8 coverage report
 npm run typecheck      # tsc -b --noEmit
 npm run lint           # eslint (zero warnings expected)
 npm run build          # tsc -b && vite build → dist/
