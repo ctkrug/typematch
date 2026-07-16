@@ -43,7 +43,7 @@ export function App() {
     displayCategory: display.font.category,
     uiCategory: ui.font.category,
     theme: pairing.theme,
-    revision: `${display.font.family}|${ui.font.family}|${display.error}|${ui.error}`,
+    revision: `${display.revision}:${ui.revision}`,
   });
 
   // Mirror the pairing into the URL so it's always shareable and the back

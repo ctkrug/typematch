@@ -11,10 +11,12 @@ export interface UsePairingScoreInput {
   uiCategory: FontCategory;
   theme: Theme;
   /**
-   * Bump this when the underlying faces change identity, so the memo
-   * re-measures. Two different families can share a stack string only if one
-   * failed to load, but the fallback *is* a different rendering — the score
-   * must reflect what's actually painted.
+   * Changes whenever either slot commits a new render.
+   *
+   * Load-bearing, not decorative: the first paint applies a font's stack
+   * before its face has downloaded, so measuring on stack alone scores the
+   * *fallback* and never recomputes — the stack string is identical once the
+   * real face arrives.
    */
   revision: string;
 }
@@ -46,6 +48,9 @@ export function usePairingScore(input: UsePairingScoreInput): PairingScore | nul
       display: { metrics: displayMetrics, category: displayCategory },
       ui: { metrics: uiMetrics, category: uiCategory },
     });
-    // `revision` is a deliberate dependency: see the doc comment above.
+    // `revision` looks unused to the lint rule, but it stands in for "the
+    // painted pixels changed" — dropping it freezes the score on the fallback
+    // measured at first paint. See the doc comment above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayStack, uiStack, displayCategory, uiCategory, theme, measurer, revision]);
 }

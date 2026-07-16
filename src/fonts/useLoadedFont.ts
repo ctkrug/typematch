@@ -11,6 +11,12 @@ export interface AppliedFont {
   stack: string;
   /** Set when this family failed to load and `stack` is a system fallback. */
   error: string | null;
+  /**
+   * Increments on every commit. Consumers that measure the painted text need
+   * this: the very first commit happens before the face has downloaded, and
+   * the stack string alone can't tell them the pixels have since changed.
+   */
+  revision: number;
 }
 
 export interface LoadedFontState extends AppliedFont {
@@ -35,6 +41,7 @@ export function useLoadedFont(font: FontFamily, override?: FontLoader): LoadedFo
     font,
     stack: fontStack(font),
     error: null,
+    revision: 0,
   }));
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,11 +51,12 @@ export function useLoadedFont(font: FontFamily, override?: FontLoader): LoadedFo
 
     loader.load(font).then((result) => {
       if (cancelled) return;
-      setApplied({
+      setApplied((previous) => ({
         font,
         stack: result.status === "error" ? fallbackStack(font) : fontStack(font),
         error: result.status === "error" ? (result.error ?? "This font could not be loaded.") : null,
-      });
+        revision: previous.revision + 1,
+      }));
       setIsLoading(false);
     });
 
